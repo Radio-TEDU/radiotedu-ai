@@ -1,0 +1,282 @@
+﻿[
+    {
+        "path":  ".gitignore",
+        "size":  72,
+        "sha256":  "B18FD5034066E6B7E2DABB3D893528BDCB6CB246F31D05CC2200BD0924EE6B46"
+    },
+    {
+        "path":  "backend/__init__.py",
+        "size":  36,
+        "sha256":  "F2A3BFC89A6135D52BB32FE1A3B7F70B239AB885DDB9BFE1C3AC7D5C7C05FFA3"
+    },
+    {
+        "path":  "backend/audio/processing.py",
+        "size":  1741,
+        "sha256":  "2AA09B6C84AB7C5892DD273EE57C64C939AAA70805B9BF109C6168284F76800D"
+    },
+    {
+        "path":  "backend/config.py",
+        "size":  12214,
+        "sha256":  "F971DC9C80CC245A5E9B3EFC6DDD47A06A7E791F6FF4E9285919B5F775E3F3AA"
+    },
+    {
+        "path":  "backend/database.py",
+        "size":  40398,
+        "sha256":  "9EEFD2E0A2882CE3218E3C73244578B8585DF344780FF4C5C505A7569A625397"
+    },
+    {
+        "path":  "backend/platform_api.py",
+        "size":  27727,
+        "sha256":  "5D323EABD890D0AA030BE9EBB1ACBE4F45B12C1B731CECA81C2CCF4FD2FF57A1"
+    },
+    {
+        "path":  "backend/public_app.py",
+        "size":  4531,
+        "sha256":  "02BC7262370E7B0366810DEBC9CD919722CE4EC42D74E3770F4A7B45F7DAEF39"
+    },
+    {
+        "path":  "backend/stations/__init__.py",
+        "size":  164,
+        "sha256":  "A7397E39D2EEE43CF9487958CA4033A664B17539918F95EC2303AE534C3A8302"
+    },
+    {
+        "path":  "backend/stations/context.py",
+        "size":  7613,
+        "sha256":  "1614F09EA7FEFBB9B7BBD2FF5C1C3A126946AAE6E9E610ED946E4F10BAF8FA88"
+    },
+    {
+        "path":  "backend/stations/loader.py",
+        "size":  14391,
+        "sha256":  "8F6BB9DFC380ECC61924F352CC7F4ED3209E6B0B1D2857FAD98D3EC22C37ED2D"
+    },
+    {
+        "path":  "backend/stations/models.py",
+        "size":  1256,
+        "sha256":  "38315B7763A0365D54B5CA26CBFDBD0A3602B92BAE7E2BB8D7733B29CFEDF6D9"
+    },
+    {
+        "path":  "dist/frontend/assets/index-BNomsHt9.js",
+        "size":  157242,
+        "sha256":  "1675A875214CE06E2FD3FAFF508403CF7FAAD5DA52241913DF1469F481CA2C3F"
+    },
+    {
+        "path":  "dist/frontend/assets/index-CSxj5TIb.css",
+        "size":  47565,
+        "sha256":  "3998EFA0707EB3820D3D0C2025F2E62703B30EF0215E54D6C14CAE8272BD47F4"
+    },
+    {
+        "path":  "dist/frontend/brand/radiotedu-logo-white.png",
+        "size":  52974,
+        "sha256":  "7B621E98364564A8DF162F0D49BED25EC66918A23629F74A96E1E991B599DF26"
+    },
+    {
+        "path":  "dist/frontend/brand/radiotedu-station.png",
+        "size":  100257,
+        "sha256":  "E55EA0CF1ABF741E0B7C8F32F291D9AF0E5F2B459594322AFA3560044B795F74"
+    },
+    {
+        "path":  "dist/frontend/brand/rtai-logo.png",
+        "size":  246198,
+        "sha256":  "B0D3ADA53A6F092C4AEB1803A44A6A810B076A823879E11EE5B35D37B867BC65"
+    },
+    {
+        "path":  "dist/frontend/index.html",
+        "size":  406,
+        "sha256":  "2EFF44B2E424D694B308338B2B59FAC11461EAC8DDE770C4F8404BCC37E8AAAB"
+    },
+    {
+        "path":  "dist/frontend/programs/campus_frequencies.png",
+        "size":  2651905,
+        "sha256":  "A7D26C966A0F1A9C6A1E3E1A1BDF973D23FBEB9CAA6EC411A42AD3C2B7E880B7"
+    },
+    {
+        "path":  "dist/frontend/programs/morning_signal.png",
+        "size":  2388974,
+        "sha256":  "A1251F8DD21B490ECCE1E14D7FA2FF7DFC610795CEEFF66170C85662171AE3C8"
+    },
+    {
+        "path":  "dist/frontend/programs/night_lab.png",
+        "size":  2606569,
+        "sha256":  "6A3015C472900D47D3CA47B668B656E4A95FD9EB1F1AD0C974033A6BD4120B36"
+    },
+    {
+        "path":  "dist/frontend/programs/overnight_signal.png",
+        "size":  1882417,
+        "sha256":  "08278570AD36CAD7A3A3CD290CB3343A9B4A27173A6079D4BBCA7E38DF1A4EA8"
+    },
+    {
+        "path":  "dist/frontend/programs/weekend_overnight.png",
+        "size":  2384743,
+        "sha256":  "7794DD6FE1D9B7ECCAB476A280D8915C78731F40419FFA541F92CABE271E94FA"
+    },
+    {
+        "path":  "dist/frontend/programs/weekend_transmission.png",
+        "size":  2743403,
+        "sha256":  "E13B82D1EAF8A01A1C36AC3870EA2477015BE4B4231C1E7A75F713A4D33D8B18"
+    },
+    {
+        "path":  "frontend/index.html",
+        "size":  308,
+        "sha256":  "B10F49802D8AC70337CC49CA6A8011B8F392B66F94EDBEF57D317F93E1EB2F1A"
+    },
+    {
+        "path":  "frontend/public/brand/radiotedu-logo-white.png",
+        "size":  52974,
+        "sha256":  "7B621E98364564A8DF162F0D49BED25EC66918A23629F74A96E1E991B599DF26"
+    },
+    {
+        "path":  "frontend/public/brand/radiotedu-station.png",
+        "size":  100257,
+        "sha256":  "E55EA0CF1ABF741E0B7C8F32F291D9AF0E5F2B459594322AFA3560044B795F74"
+    },
+    {
+        "path":  "frontend/public/brand/rtai-logo.png",
+        "size":  246198,
+        "sha256":  "B0D3ADA53A6F092C4AEB1803A44A6A810B076A823879E11EE5B35D37B867BC65"
+    },
+    {
+        "path":  "frontend/public/programs/campus_frequencies.png",
+        "size":  2651905,
+        "sha256":  "A7D26C966A0F1A9C6A1E3E1A1BDF973D23FBEB9CAA6EC411A42AD3C2B7E880B7"
+    },
+    {
+        "path":  "frontend/public/programs/morning_signal.png",
+        "size":  2388974,
+        "sha256":  "A1251F8DD21B490ECCE1E14D7FA2FF7DFC610795CEEFF66170C85662171AE3C8"
+    },
+    {
+        "path":  "frontend/public/programs/night_lab.png",
+        "size":  2606569,
+        "sha256":  "6A3015C472900D47D3CA47B668B656E4A95FD9EB1F1AD0C974033A6BD4120B36"
+    },
+    {
+        "path":  "frontend/public/programs/overnight_signal.png",
+        "size":  1882417,
+        "sha256":  "08278570AD36CAD7A3A3CD290CB3343A9B4A27173A6079D4BBCA7E38DF1A4EA8"
+    },
+    {
+        "path":  "frontend/public/programs/weekend_overnight.png",
+        "size":  2384743,
+        "sha256":  "7794DD6FE1D9B7ECCAB476A280D8915C78731F40419FFA541F92CABE271E94FA"
+    },
+    {
+        "path":  "frontend/public/programs/weekend_transmission.png",
+        "size":  2743403,
+        "sha256":  "E13B82D1EAF8A01A1C36AC3870EA2477015BE4B4231C1E7A75F713A4D33D8B18"
+    },
+    {
+        "path":  "frontend/src/__tests__/public-app.test.tsx",
+        "size":  3360,
+        "sha256":  "4D91A4E4BF37F8357922FA0EF3F4622A70B30639D0DF31700ECE784CC3097703"
+    },
+    {
+        "path":  "frontend/src/api.ts",
+        "size":  2519,
+        "sha256":  "4FFD0B52A27D3443900D80E275026DF3AA83D88E872E8AD8E99938C5472ABEC5"
+    },
+    {
+        "path":  "frontend/src/App.tsx",
+        "size":  2987,
+        "sha256":  "83D4F7A616918A0496412EBF5F1A7205E4CD59CC9094BB01A9D1E14210B6F426"
+    },
+    {
+        "path":  "frontend/src/components/PublicDashboard.tsx",
+        "size":  15770,
+        "sha256":  "8CE31EB3473258954895C3DA8003FD2B8E1CC9FF17F34553BC11CABF50370F53"
+    },
+    {
+        "path":  "frontend/src/main.tsx",
+        "size":  264,
+        "sha256":  "E9F635AD2D413A08037847EE1620217E41FC40B851A810A102BB0EF2D32487D5"
+    },
+    {
+        "path":  "frontend/src/styles.css",
+        "size":  60272,
+        "sha256":  "3A03E226CCE5980C6082A2E8C481F02CD91F78021722465B38658E262986EEA8"
+    },
+    {
+        "path":  "frontend/src/test/setup.ts",
+        "size":  507,
+        "sha256":  "3D9C623012127C26CA0B2B9AF161AA7554774BF9EE537BC14465F5800580BCBE"
+    },
+    {
+        "path":  "frontend/tsconfig.json",
+        "size":  545,
+        "sha256":  "7C3DE93915602191531C0489488BEB9F38EA2D90E3B412A6C54342964C68221B"
+    },
+    {
+        "path":  "frontend/vite.config.ts",
+        "size":  382,
+        "sha256":  "E6B4A348A0101177320F93E221D3495E3ACC9BBADED0AEA33A6DA31FB6F34D99"
+    },
+    {
+        "path":  "frontend/vitest.config.ts",
+        "size":  244,
+        "sha256":  "C6DCF727FE13160AADA3B206E187A1EB28C274C917E4C5593630D80C260F28A5"
+    },
+    {
+        "path":  "package.json",
+        "size":  755,
+        "sha256":  "0D5066D90FBC0B11ACBD82B55B598525F0DF8BA88CD74553A80E6181E8C993F4"
+    },
+    {
+        "path":  "package-lock.json",
+        "size":  85491,
+        "sha256":  "F3617F399070F57D18AAC39275E903AE2970D032828024E9D5705C71D156988B"
+    },
+    {
+        "path":  "packaging/web/.gitignore",
+        "size":  72,
+        "sha256":  "B18FD5034066E6B7E2DABB3D893528BDCB6CB246F31D05CC2200BD0924EE6B46"
+    },
+    {
+        "path":  "packaging/web/BROADCAST-CONNECTION.md",
+        "size":  2612,
+        "sha256":  "4FFBF21716DB5ED18F113113A2107092E3D56694C86D90FA384A3EA8B0F15D16"
+    },
+    {
+        "path":  "packaging/web/README.md",
+        "size":  1491,
+        "sha256":  "050C4A45FD277F479A7C3F51C301BFCB35C04E40CE35EA1A6D51729654A9A820"
+    },
+    {
+        "path":  "packaging/web/requirements-web.lock.txt",
+        "size":  293,
+        "sha256":  "6839B7F7BED311051BA905012F49B738E142ACE594099F2529ACC81527B0805B"
+    },
+    {
+        "path":  "packaging/web/verify-broadcast-connection.ps1",
+        "size":  1927,
+        "sha256":  "7EEBD24225CE4EC9BDADE6C7B14D2AC4F78EFB87C07737E5F88155FD0013613D"
+    },
+    {
+        "path":  "packaging/web/web.env.example",
+        "size":  507,
+        "sha256":  "F8A6ACDA0724E069558BF4F6126647AF33D58A959E69A6842DBE5EB1C5715BBC"
+    },
+    {
+        "path":  "README.md",
+        "size":  1491,
+        "sha256":  "050C4A45FD277F479A7C3F51C301BFCB35C04E40CE35EA1A6D51729654A9A820"
+    },
+    {
+        "path":  "scripts/smoke_public_server.py",
+        "size":  5195,
+        "sha256":  "FA5C185E97B892FA7A3920E2A95AFFD912B2E62F28978C1CBB496D5B113D0FB8"
+    },
+    {
+        "path":  "SERVER-CODEX-PROMPT.md",
+        "size":  11731,
+        "sha256":  "5EAA9A34E1FEF9175760F0AD07A0EFC3FBC0E9E817C34839FBF3F030A376BED6"
+    },
+    {
+        "path":  "tests/backend/test_platform_api.py",
+        "size":  15192,
+        "sha256":  "674557B66C52A8E18437C241C6EE2C4BDD8CF3BA5C7DC77CE8FE9127D4701DAD"
+    },
+    {
+        "path":  "tests/backend/test_public_app.py",
+        "size":  3965,
+        "sha256":  "9A7F3531C3CC87A52BD007CFF95B064B87C9772A9831B0B8E3014BE954FBB6D8"
+    }
+]
