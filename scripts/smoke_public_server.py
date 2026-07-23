@@ -4,7 +4,6 @@ import argparse
 import json
 import urllib.error
 import urllib.request
-import uuid
 
 
 STATIONS = ("radiotedu-en", "radiotedu-fr")
@@ -67,21 +66,23 @@ def run_smoke(base_url: str) -> dict:
     station_results: dict[str, object] = {}
     for station_id in STATIONS:
         root = f"/v1/radio/stations/{station_id}"
-        session_id = f"smoke_{uuid.uuid4()}"
-        session = {"session_id": session_id}
-        start = request_json(base_url, f"{root}/sessions/start", method="POST", payload=session)
         status = request_json(base_url, f"{root}/status")
-        heartbeat = request_json(base_url, f"{root}/sessions/heartbeat", method="POST", payload=session)
-        end = request_json(base_url, f"{root}/sessions/end", method="POST", payload=session)
+        removed_session = request_json(
+            base_url,
+            f"{root}/sessions/start",
+            method="POST",
+            payload={"session_id": "session_removed"},
+        )
         status_json = status.get("json") or {}
         metrics = status_json.get("metrics") or {}
         station_results[station_id] = {
-            "ok": all(item.get("ok") for item in (start, status, heartbeat, end))
-            and "active_website_listeners" in metrics,
+            "ok": bool(status.get("ok"))
+            and removed_session.get("status") == 404
+            and "active_website_listeners" not in metrics
+            and all(key in metrics for key in ("airtime", "recent_plays", "top_songs_14d", "top_genres_14d")),
             "status": status.get("status"),
             "online": status_json.get("online"),
             "stale": status_json.get("stale"),
-            "active_website_listeners": metrics.get("active_website_listeners"),
         }
     results["stations"] = station_results
     absent_routes_ok = all(
@@ -107,7 +108,7 @@ def main() -> int:
     else:
         print(f"RadioTEDU public server: {'OK' if report['ok'] else 'FAILED'}")
         for station_id, station in report["stations"].items():
-            print(f"- {station_id}: status={station['status']} online={station['online']} listeners={station['active_website_listeners']}")
+            print(f"- {station_id}: status={station['status']} online={station['online']}")
         if report["openapi"]["forbidden_paths"]:
             print(f"- forbidden OpenAPI terms: {', '.join(report['openapi']['forbidden_paths'])}")
     return 1 if args.strict and not report["ok"] else 0

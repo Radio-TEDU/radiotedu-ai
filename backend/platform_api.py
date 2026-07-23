@@ -11,7 +11,7 @@ from typing import Literal
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, Response
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 from .config import Settings
 from .database import connect, init_db, now_iso
@@ -20,14 +20,15 @@ from .database import connect, init_db, now_iso
 PROTOCOL = "radiotedu-platform/v1"
 STATIONS = frozenset({"radiotedu-en", "radiotedu-fr"})
 LANGUAGES = {"radiotedu-en": "en", "radiotedu-fr": "fr"}
-MOUNTS = {"radiotedu-en": "/en", "radiotedu-fr": "/fr"}
+MOUNTS = {"radiotedu-en": "/ai", "radiotedu-fr": "/event"}
 STREAM_URLS = {
-    "radiotedu-en": "https://stream.radiotedu.com/en",
-    "radiotedu-fr": "https://stream.radiotedu.com/fr",
+    "radiotedu-en": "https://stream.radiotedu.com/ai",
+    "radiotedu-fr": "https://stream.radiotedu.com/event",
 }
 SOUND_TAGS = frozenset({"warm", "bright", "calm", "focused", "energetic"})
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
-_SAFE_SESSION_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{15,127}$")
+_PRIVATE_PATH = re.compile(r"(?:[A-Za-z]:\\|\\\\)")
+_CONTROL = re.compile(r"[\x00-\x1f\x7f]")
 
 
 class StrictModel(BaseModel):
@@ -69,9 +70,9 @@ class PublicProgram(StrictModel):
 
 class PublicStream(StrictModel):
     url: str = Field(min_length=1, max_length=256)
-    mount: Literal["/en", "/fr"]
+    mount: Literal["/ai", "/event"]
     status: Literal["live", "degraded", "offline", "unknown"]
-    codec: Literal["AAC-LC"]
+    codec: Literal["MP3"]
     bitrate_kbps: Literal[192]
     public: Literal[True]
 
@@ -113,13 +114,24 @@ class PlayEventEnvelope(StrictModel):
     program_id: str | None = Field(default=None, max_length=128)
     program_name: str | None = Field(default=None, max_length=160)
     cover_id: str | None = Field(default=None, max_length=128)
+    genre: str | None = Field(default=None, max_length=64)
     sound_tags: list[Literal["warm", "bright", "calm", "focused", "energetic"]] = Field(
         default_factory=list, max_length=5
     )
 
-
-class PublicSession(StrictModel):
-    session_id: str = Field(min_length=16, max_length=128)
+    @field_validator("genre")
+    @classmethod
+    def validate_genre(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = " ".join(value.split())
+        if (
+            not normalized
+            or _CONTROL.search(normalized)
+            or _PRIVATE_PATH.search(normalized)
+        ):
+            raise ValueError("genre is not a safe public label")
+        return normalized
 
 
 class HandshakeRequest(StrictModel):
@@ -316,6 +328,19 @@ def _validate_snapshot_identity(snapshot: SnapshotV2, station_id: str) -> bool:
     )
 
 
+def _contains_private_source(value: object) -> bool:
+    if isinstance(value, str):
+        return bool(_PRIVATE_PATH.search(value) or _CONTROL.search(value))
+    if isinstance(value, dict):
+        return any(
+            _contains_private_source(key) or _contains_private_source(item)
+            for key, item in value.items()
+        )
+    if isinstance(value, (list, tuple)):
+        return any(_contains_private_source(item) for item in value)
+    return False
+
+
 def _existing_idempotent_response(conn, auth: dict[str, str], method: str, path: str):
     row = conn.execute(
         "select method, path, body_hash, status_code, response_json from public_idempotency_records where agent_id=? and idempotency_key=?",
@@ -370,16 +395,6 @@ def _store_idempotent_response(
     )
 
 
-def _session_metrics(settings: Settings, station_id: str) -> dict[str, int]:
-    cutoff = datetime.fromtimestamp(time.time() - 30, tz=timezone.utc).isoformat()
-    with connect(settings) as conn:
-        listeners = conn.execute(
-            "select count(*) from public_station_sessions where station_id=? and ended_at is null and last_seen_at>=?",
-            (station_id, cutoff),
-        ).fetchone()[0]
-    return {"active_website_listeners": int(listeners)}
-
-
 def _airtime_metrics(settings: Settings, station_id: str) -> dict[str, int | None]:
     cutoff = (datetime.now(timezone.utc) - timedelta(days=14)).isoformat()
     with connect(settings) as conn:
@@ -412,6 +427,114 @@ def _airtime_metrics(settings: Settings, station_id: str) -> dict[str, int | Non
     }
 
 
+def _public_music_history(settings: Settings, station_id: str) -> dict:
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=14)).isoformat()
+    with connect(settings) as conn:
+        recent_rows = conn.execute(
+            """
+            select occurred_at, duration_ms, payload_json
+            from public_play_events
+            where station_id=? and classification='music'
+            order by occurred_at desc, event_id desc
+            limit 10
+            """,
+            (station_id,),
+        ).fetchall()
+        aggregate_rows = conn.execute(
+            """
+            select occurred_at, duration_ms, payload_json
+            from public_play_events
+            where station_id=? and classification='music' and occurred_at>=?
+            order by occurred_at desc, event_id desc
+            limit 20000
+            """,
+            (station_id, cutoff),
+        ).fetchall()
+
+    def public_play(row) -> dict | None:
+        try:
+            payload = json.loads(row["payload_json"])
+        except (TypeError, ValueError):
+            return None
+        title = str(payload.get("track_title") or "").strip()
+        artist = str(payload.get("artist") or "").strip()
+        if not title:
+            return None
+        cover_id = str(payload.get("cover_id") or "").strip()
+        return {
+            "title": title[:200],
+            "artist": artist[:160] or None,
+            "program_name": str(payload.get("program_name") or "").strip()[:160] or None,
+            "occurred_at": row["occurred_at"],
+            "duration_ms": int(row["duration_ms"]),
+            "genre": str(payload.get("genre") or "").strip()[:64] or None,
+            "cover_url": (
+                f"/v1/radio/stations/{station_id}/covers/{cover_id}"
+                if cover_id and _SAFE_ID.fullmatch(cover_id)
+                else None
+            ),
+        }
+
+    recent_plays = [item for row in recent_rows if (item := public_play(row)) is not None]
+    songs: dict[str, dict] = {}
+    genres: dict[str, dict] = {}
+    classified_genre_ms = 0
+    for row in aggregate_rows:
+        try:
+            payload = json.loads(row["payload_json"])
+        except (TypeError, ValueError):
+            continue
+        title = str(payload.get("track_title") or "").strip()
+        artist = str(payload.get("artist") or "").strip()
+        if not title:
+            continue
+        track_id = str(payload.get("track_id") or "").strip()
+        key = (
+            f"id:{track_id}"
+            if track_id
+            else "meta:" + " ".join(f"{title} {artist}".casefold().split())
+        )
+        song = songs.setdefault(
+            key,
+            {"title": title[:200], "artist": artist[:160] or None, "play_count": 0},
+        )
+        song["play_count"] += 1
+        genre = " ".join(str(payload.get("genre") or "").split())
+        duration_ms = max(0, int(row["duration_ms"]))
+        if genre:
+            genre_key = genre.casefold()
+            entry = genres.setdefault(
+                genre_key, {"genre": genre[:64], "duration_ms": 0}
+            )
+            entry["duration_ms"] += duration_ms
+            classified_genre_ms += duration_ms
+
+    top_songs = sorted(
+        songs.values(),
+        key=lambda item: (-int(item["play_count"]), item["title"].casefold(), str(item["artist"] or "").casefold()),
+    )[:5]
+    top_genres = []
+    if classified_genre_ms > 0:
+        ranked = sorted(
+            genres.values(),
+            key=lambda item: (-int(item["duration_ms"]), item["genre"].casefold()),
+        )[:6]
+        top_genres = [
+            {
+                "genre": item["genre"],
+                "airtime_percent": round(
+                    int(item["duration_ms"]) * 100 / classified_genre_ms
+                ),
+            }
+            for item in ranked
+        ]
+    return {
+        "recent_plays": recent_plays,
+        "top_songs_14d": top_songs,
+        "top_genres_14d": top_genres,
+    }
+
+
 def station_status_payload(settings: Settings, station_id: str):
     """Read the canonical public status shared by v1 and the legacy EN adapter."""
     if station_id not in STATIONS:
@@ -430,8 +553,8 @@ def station_status_payload(settings: Settings, station_id: str):
             fresh = datetime.now(timezone.utc) - received <= timedelta(seconds=settings.snapshot_ttl_seconds)
         except (TypeError, ValueError):
             fresh = False
-    metrics = _session_metrics(settings, station_id)
-    metrics["airtime"] = _airtime_metrics(settings, station_id)
+    metrics = {"airtime": _airtime_metrics(settings, station_id)}
+    metrics.update(_public_music_history(settings, station_id))
     return {
         "protocol": PROTOCOL,
         "station_id": station_id,
@@ -441,36 +564,6 @@ def station_status_payload(settings: Settings, station_id: str):
         "snapshot": snapshot,
         "metrics": metrics,
     }
-
-
-def apply_session_operation(settings: Settings, station_id: str, session_id: str, operation: str):
-    """Store station-scoped listener presence without IP or browser identity."""
-    if station_id not in STATIONS:
-        return _error(404, "unknown_station", "station is not available", str(uuid.uuid4()))
-    if not _SAFE_SESSION_ID.fullmatch(session_id):
-        return _error(422, "invalid_session", "session identifier is invalid", str(uuid.uuid4()))
-    timestamp = now_iso()
-    with connect(settings) as conn:
-        if operation == "end":
-            conn.execute(
-                "update public_station_sessions set last_seen_at=?, ended_at=? where station_id=? and session_id=?",
-                (timestamp, timestamp, station_id, session_id),
-            )
-        else:
-            conn.execute(
-                """
-                insert into public_station_sessions(station_id, session_id, started_at, last_seen_at, ended_at)
-                values (?, ?, ?, ?, null)
-                on conflict(station_id, session_id) do update set
-                    last_seen_at=excluded.last_seen_at,
-                    ended_at=null
-                """,
-                (station_id, session_id, timestamp, timestamp),
-            )
-        conn.commit()
-    return {"station_id": station_id, "session_id": session_id, **_session_metrics(settings, station_id)}
-
-
 async def _read_limited_body(request: Request, max_bytes: int) -> bytes | None:
     """Read an upload incrementally and stop before retaining more than the cap."""
 
@@ -558,7 +651,10 @@ def install_platform_routes(app: FastAPI, settings: Settings) -> None:
             snapshot = SnapshotV2.model_validate_json(body)
         except ValidationError:
             return _error(422, "invalid_payload", "snapshot payload is invalid", correlation_id)
-        if not _validate_snapshot_identity(snapshot, station_id):
+        if (
+            not _validate_snapshot_identity(snapshot, station_id)
+            or _contains_private_source(snapshot.model_dump(mode="json"))
+        ):
             return _error(422, "invalid_payload", "snapshot identity is invalid", correlation_id)
         response = {
             "stored": True,
@@ -630,7 +726,10 @@ def install_platform_routes(app: FastAPI, settings: Settings) -> None:
             event = PlayEventEnvelope.model_validate_json(body)
         except ValidationError:
             return _error(422, "invalid_payload", "play event payload is invalid", correlation_id)
-        if event.station_id != station_id:
+        if (
+            event.station_id != station_id
+            or _contains_private_source(event.model_dump(mode="json"))
+        ):
             return _error(422, "invalid_payload", "play event identity is invalid", correlation_id)
         response = {
             "stored": True,
@@ -741,15 +840,3 @@ def install_platform_routes(app: FastAPI, settings: Settings) -> None:
     @app.get("/v1/radio/stations/{station_id}/status")
     def station_status(station_id: str):
         return station_status_payload(settings, station_id)
-
-    @app.post("/v1/radio/stations/{station_id}/sessions/start")
-    def session_start(station_id: str, session: PublicSession):
-        return apply_session_operation(settings, station_id, session.session_id, "start")
-
-    @app.post("/v1/radio/stations/{station_id}/sessions/heartbeat")
-    def session_heartbeat(station_id: str, session: PublicSession):
-        return apply_session_operation(settings, station_id, session.session_id, "heartbeat")
-
-    @app.post("/v1/radio/stations/{station_id}/sessions/end")
-    def session_end(station_id: str, session: PublicSession):
-        return apply_session_operation(settings, station_id, session.session_id, "end")

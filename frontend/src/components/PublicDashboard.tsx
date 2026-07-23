@@ -70,13 +70,12 @@ const COPY = {
     title: 'Can AI lead a real radio station?',
     intro: 'RadioTEDU gives RTAI a live booth, a local music library and a weekly schedule. It selects the next track, prepares short links and keeps two language channels moving around the clock.',
     capabilities: 'Agent capabilities',
-    capabilityItems: ['Play local music', 'Schedule programs', 'Host live segments', 'Watch the signal', 'Read listener stats'],
+    capabilityItems: ['Play local music', 'Schedule programs', 'Host live segments', 'Watch the signal', 'Explain the mix'],
     station: 'RadioTEDU English',
     stationLine: 'AI-led English channel',
     listen: 'Listen live',
     pause: 'Pause live radio',
     now: 'Now playing',
-    listeners: 'Current listeners',
     aiHost: 'RTAI host',
     onMic: 'On microphone',
     curating: 'Curating in the background',
@@ -88,6 +87,10 @@ const COPY = {
     music: 'Music',
     talking: 'Talking',
     sound: 'Sound character',
+    recent: 'Recently played',
+    topSongs: 'Top songs · last 14 days',
+    topGenres: 'Top genres · last 14 days',
+    plays: 'plays',
     unavailable: 'Unavailable',
     waiting: 'Waiting for the broadcast signal',
     live: 'Live',
@@ -106,13 +109,12 @@ const COPY = {
     title: 'Une IA peut-elle diriger une vraie radio ?',
     intro: 'RadioTEDU confie à RTAI un studio en direct, une discothèque locale et une grille hebdomadaire. Elle choisit le morceau suivant, prépare de courtes interventions et anime deux chaînes linguistiques en continu.',
     capabilities: 'Capacités de l’agent',
-    capabilityItems: ['Diffuser la musique locale', 'Planifier les émissions', 'Animer en direct', 'Surveiller le signal', 'Lire les statistiques'],
+    capabilityItems: ['Diffuser la musique locale', 'Planifier les émissions', 'Animer en direct', 'Surveiller le signal', 'Expliquer le mix'],
     station: 'RadioTEDU Français',
     stationLine: 'Chaîne française menée par l’IA',
     listen: 'Écouter en direct',
     pause: 'Mettre la radio en pause',
     now: 'En cours',
-    listeners: 'Auditeurs actuels',
     aiHost: 'Animateur RTAI',
     onMic: 'Au micro',
     curating: 'Programmation en arrière-plan',
@@ -124,6 +126,10 @@ const COPY = {
     music: 'Musique',
     talking: 'Parlé',
     sound: 'Caractère sonore',
+    recent: 'Diffusés récemment',
+    topSongs: 'Titres les plus joués · 14 jours',
+    topGenres: 'Genres dominants · 14 jours',
+    plays: 'diffusions',
     unavailable: 'Indisponible',
     waiting: 'En attente du signal de diffusion',
     live: 'En direct',
@@ -176,6 +182,18 @@ function localizedProgram(id: string | undefined, language: PublicLanguage) {
   const fallback = PROGRAMS.find((program) => program.id === scheduledProgramNow())!;
   const program = PROGRAMS.find((candidate) => candidate.id === normalizedId) ?? fallback;
   return { ...program, ...program[language] };
+}
+
+function publicPlayTime(value: string, language: PublicLanguage) {
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.valueOf())) return '';
+  return new Intl.DateTimeFormat(language === 'fr' ? 'fr-FR' : 'en-GB', {
+    timeZone: 'Europe/Istanbul',
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(parsed);
 }
 
 export function PublicDashboard({ status, language, connectionError, onLanguageChange = () => undefined }: PublicDashboardProps) {
@@ -252,8 +270,8 @@ export function PublicDashboard({ status, language, connectionError, onLanguageC
             <div><strong>{playing ? copy.live : copy.listen}</strong><span>MP3 · 192 kbps · {language.toUpperCase()}</span></div>
           </div>
           <dl className="rtfm__hero-facts">
-            <div><dt>{copy.listeners}</dt><dd>{status.metrics.active_website_listeners}</dd></div>
             <div><dt>{copy.current}</dt><dd>{currentProgram.name}<small>{currentProgram.time}</small></dd></div>
+            <div><dt>{copy.aiHost}</dt><dd>{snapshot?.speech_state.active ? copy.onMic : copy.curating}</dd></div>
           </dl>
           <audio ref={audioRef} preload="none" src={streamUrl} aria-label={copy.player} onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} />
         </aside>
@@ -300,6 +318,45 @@ export function PublicDashboard({ status, language, connectionError, onLanguageC
           </div>
 
           <div className="rtfm__tags"><p>{copy.sound}</p><div>{tags.length ? tags.map((tag) => <span key={tag}>{TAG_LABELS[language][tag]}</span>) : <span>{copy.unavailable}</span>}</div></div>
+        </div>
+      </section>
+
+      <section className="rtfm__history" aria-label={copy.last14}>
+        <article className="rtfm__recent">
+          <p className="rtfm__history-kicker">{copy.recent}</p>
+          <h2>{copy.recent}</h2>
+          {status.metrics.recent_plays.length ? (
+            <ol>
+              {status.metrics.recent_plays.map((play, index) => (
+                <li key={`${play.occurred_at}-${play.title}-${index}`}>
+                  {play.cover_url ? <img src={play.cover_url} alt="" /> : <span className="rtfm__history-cover">{String(index + 1).padStart(2, '0')}</span>}
+                  <div><strong>{play.title}</strong><span>{play.artist || copy.unavailable}</span></div>
+                  <small>{play.program_name || copy.unavailable}<br />{publicPlayTime(play.occurred_at, language)}</small>
+                </li>
+              ))}
+            </ol>
+          ) : <p className="rtfm__empty">{copy.unavailable}</p>}
+        </article>
+        <div className="rtfm__rankings">
+          <article>
+            <p className="rtfm__history-kicker">14 / DAYS</p>
+            <h2>{copy.topSongs}</h2>
+            {status.metrics.top_songs_14d.length ? <ol>
+              {status.metrics.top_songs_14d.map((song) => <li key={`${song.title}-${song.artist || ''}`}>
+                <div><strong>{song.title}</strong><span>{song.artist || copy.unavailable}</span></div>
+                <b>{song.play_count} {copy.plays}</b>
+              </li>)}
+            </ol> : <p className="rtfm__empty">{copy.unavailable}</p>}
+          </article>
+          <article>
+            <p className="rtfm__history-kicker">AIRTIME / 14 DAYS</p>
+            <h2>{copy.topGenres}</h2>
+            {status.metrics.top_genres_14d.length ? <ol>
+              {status.metrics.top_genres_14d.map((genre) => <li key={genre.genre}>
+                <strong>{genre.genre}</strong><b>{genre.airtime_percent}%</b>
+              </li>)}
+            </ol> : <p className="rtfm__empty">{copy.unavailable}</p>}
+          </article>
         </div>
       </section>
 

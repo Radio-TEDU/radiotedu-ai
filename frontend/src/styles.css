@@ -82,7 +82,6 @@
 .rtfm__hero-facts div { min-height: 112px; padding: 1rem; border-right: 1px solid #393939; border-bottom: 1px solid #393939; }
 .rtfm__hero-facts dt { color: #777; font-size: 0.62rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
 .rtfm__hero-facts dd { display: flex; flex-direction: column; justify-content: flex-end; min-height: 68px; margin: 0; font-size: clamp(1.15rem, 1.8vw, 1.65rem); font-weight: 850; line-height: 1.05; }
-.rtfm__hero-facts div:first-child dd { color: var(--rt-red); font-size: clamp(2.8rem, 5vw, 5.5rem); }
 .rtfm__hero-facts small { margin-top: 0.35rem; color: #777; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.62rem; font-weight: 500; }
 
 .rtfm__capabilities { padding: clamp(2.5rem, 5vw, 4.5rem) clamp(1.25rem, 4vw, 4.5rem); background: #fff; border-bottom: 1px solid var(--rt-line); }
@@ -135,6 +134,23 @@
 .rtfm__tags > div { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
 .rtfm__tags span { padding: 0.62rem 0.85rem; border: 1px solid #414141; border-radius: 999px; color: #bbb; font-size: 0.73rem; }
 
+.rtfm__history { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr); gap: 1px; color: white; background: #2d2d2d; border-top: 1px solid #2d2d2d; border-bottom: 1px solid #2d2d2d; }
+.rtfm__history article { padding: clamp(2rem, 4vw, 4.5rem); background: #0b0b0b; }
+.rtfm__history-kicker { margin: 0 0 .75rem; color: var(--rt-red); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .65rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+.rtfm__history h2 { margin: 0 0 2rem; font-size: clamp(2rem, 4vw, 4.7rem); line-height: .92; letter-spacing: -.055em; }
+.rtfm__history ol { margin: 0; padding: 0; list-style: none; }
+.rtfm__recent li { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; gap: 1rem; align-items: center; min-height: 78px; padding: .65rem 0; border-top: 1px solid #343434; }
+.rtfm__recent img, .rtfm__history-cover { display: grid; place-items: center; width: 58px; height: 58px; object-fit: cover; color: #aaa; background: #202020; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .68rem; }
+.rtfm__recent div, .rtfm__rankings li div { display: grid; gap: .25rem; min-width: 0; }
+.rtfm__recent strong, .rtfm__rankings strong { overflow: hidden; font-size: .92rem; text-overflow: ellipsis; white-space: nowrap; }
+.rtfm__recent span, .rtfm__rankings span, .rtfm__recent small { color: #888; font-size: .7rem; line-height: 1.45; }
+.rtfm__recent small { text-align: right; }
+.rtfm__rankings { display: grid; grid-template-rows: 1fr 1fr; gap: 1px; background: #2d2d2d; }
+.rtfm__rankings article { min-height: 0; }
+.rtfm__rankings li { display: flex; gap: 1rem; justify-content: space-between; align-items: center; padding: .8rem 0; border-top: 1px solid #343434; }
+.rtfm__rankings li b { flex: 0 0 auto; color: var(--rt-red); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72rem; text-transform: uppercase; }
+.rtfm__empty { margin: 0; color: #777; }
+
 .rtfm__schedule { padding: clamp(4rem, 9vw, 9rem) clamp(1.25rem, 4vw, 4.5rem); }
 .rtfm__section-head { display: grid; grid-template-columns: 0.55fr 1fr 0.8fr; gap: 2rem; align-items: end; margin-bottom: clamp(2.5rem, 6vw, 5rem); }
 .rtfm__section-head p { margin: 0; color: var(--rt-red); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.68rem; font-weight: 800; }
@@ -171,6 +187,7 @@
   .rtfm__capabilities > div { grid-template-columns: repeat(2, 1fr); }
   .rtfm__capabilities span { border-bottom: 1px solid var(--rt-line); }
   .rtfm__station { grid-template-columns: 1fr; }
+  .rtfm__history { grid-template-columns: 1fr; }
   .rtfm__cover { position: relative; top: auto; width: min(100%, 620px); }
   .rtfm__section-head { grid-template-columns: 1fr; }
   .rtfm__programs { grid-template-columns: repeat(2, 1fr); }
@@ -189,6 +206,9 @@
   .rtfm__cover-brand, .rtfm__cover-title { right: 1rem; left: 1rem; }
   .rtfm__cover-title strong { font-size: clamp(2.35rem, 13vw, 4.25rem); }
   .rtfm__facts { grid-template-columns: 1fr; }
+  .rtfm__recent li { grid-template-columns: 48px minmax(0, 1fr); }
+  .rtfm__recent img, .rtfm__history-cover { width: 48px; height: 48px; }
+  .rtfm__recent small { grid-column: 2; text-align: left; }
   .rtfm__principles article { min-height: 360px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.35); }
   .rtfm__footer { align-items: flex-start; flex-direction: column; gap: 1.5rem; }
 }

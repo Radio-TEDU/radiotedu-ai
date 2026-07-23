@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import App from '../App';
 import type { StationId, StationPublicStatusResponse } from '../api';
-import { fetchStationPublicStatus, postStationPublicSession } from '../api';
+import { fetchStationPublicStatus } from '../api';
 
 vi.mock('../api', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../api')>();
@@ -12,16 +12,14 @@ vi.mock('../api', async (importOriginal) => {
     ...actual,
     fetchStatus: vi.fn(),
     fetchStationPublicStatus: vi.fn(),
-    postStationPublicSession: vi.fn().mockResolvedValue(undefined),
   };
 });
 
 const fetchStation = vi.mocked(fetchStationPublicStatus);
-const postSession = vi.mocked(postStationPublicSession);
 
 function statusFor(stationId: StationId): StationPublicStatusResponse {
   const language = stationId === 'radiotedu-en' ? 'en' : 'fr';
-  const mount = language === 'en' ? '/en' : '/fr';
+  const mount = language === 'en' ? '/ai' : '/event';
   return {
     protocol: 'radiotedu-platform/v1',
     station_id: stationId,
@@ -44,15 +42,17 @@ function statusFor(stationId: StationId): StationPublicStatusResponse {
         url: `https://stream.radiotedu.com${mount}`,
         mount,
         status: 'live',
-        codec: 'AAC-LC',
+        codec: 'MP3',
         bitrate_kbps: 192,
         public: true,
       },
       editorial: { sound_tags: [] },
     },
     metrics: {
-      active_website_listeners: 0,
       airtime: { window_days: 14, classified_duration_ms: 0, music_percent: null, talking_percent: null },
+      recent_plays: [],
+      top_songs_14d: [],
+      top_genres_14d: [],
     },
   };
 }
@@ -73,14 +73,11 @@ describe('public listener route', () => {
     expect(await screen.findByRole('img', { name: 'RadioTEDU' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'RadioTEDU AI' })).toBeInTheDocument();
     const listener = screen.getByLabelText('RadioTEDU English listener');
-    expect(within(listener).getByText('Current listeners')).toBeInTheDocument();
-    expect(within(listener).getByText('0')).toBeInTheDocument();
+    expect(within(listener).queryByText('Current listeners')).not.toBeInTheDocument();
     expect(within(listener).getByRole('button', { name: 'Listen live' })).toBeInTheDocument();
     expect(fetchStation).toHaveBeenCalledWith('radiotedu-en');
-    await waitFor(() => expect(postSession).toHaveBeenCalledWith('radiotedu-en', 'start', expect.any(String)));
-
+    expect(screen.getByRole('heading', { name: 'Recently played' })).toBeInTheDocument();
     view.unmount();
-    expect(postSession).toHaveBeenCalledWith('radiotedu-en', 'end', expect.any(String), true);
   });
 
   it('switches to French in place without creating another page route', async () => {

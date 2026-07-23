@@ -38,7 +38,7 @@ def _client(settings: Settings) -> TestClient:
 
 def _snapshot(station_id: str = "radiotedu-en", sequence: int = 1) -> dict:
     language = "en" if station_id.endswith("-en") else "fr"
-    mount = "/en" if language == "en" else "/fr"
+    mount = "/ai" if language == "en" else "/event"
     return {
         "protocol": "radiotedu-platform/v1",
         "schema_version": 2,
@@ -78,7 +78,7 @@ def _snapshot(station_id: str = "radiotedu-en", sequence: int = 1) -> dict:
             "url": f"https://stream.radiotedu.com{mount}",
             "mount": mount,
             "status": "live",
-            "codec": "AAC-LC",
+            "codec": "MP3",
             "bitrate_kbps": 192,
             "public": True,
         },
@@ -92,6 +92,7 @@ def _play_event(
     duration_ms: int,
     occurred_at: datetime,
     station_id: str = "radiotedu-en",
+    genre: str | None = "Pop",
 ) -> dict:
     return {
         "protocol": "radiotedu-platform/v1",
@@ -108,6 +109,7 @@ def _play_event(
         "program_id": "campus-flow",
         "program_name": "Campus Flow",
         "cover_id": f"cover-{event_id}",
+        "genre": genre,
         "sound_tags": ["warm"],
     }
 
@@ -155,7 +157,7 @@ def test_valid_hmac_snapshot_is_stored_and_returned_by_station_status(tmp_path: 
     assert stored.json()["correlation_id"]
     assert status.status_code == 200
     assert status.json()["snapshot"]["now_playing"]["title"] == "Blue Campus"
-    assert status.json()["snapshot"]["stream"]["url"] == "https://stream.radiotedu.com/en"
+    assert status.json()["snapshot"]["stream"]["url"] == "https://stream.radiotedu.com/ai"
 
 
 def test_mutual_handshake_authenticates_broadcast_agent_and_website(tmp_path: Path) -> None:
@@ -362,6 +364,7 @@ def test_public_openapi_has_status_only_and_no_remote_playout_or_engagement_capa
     assert "/v1/radio/stations/{station_id}/plays" in paths
     assert "/v1/radio/stations/{station_id}/covers/{cover_id}" in paths
     assert "/v1/radio/stations/{station_id}/status" in paths
+    assert not any("/sessions/" in path for path in paths)
     for forbidden in ("admin", "contact", "message", "purchase", "wallet", "reward", "vote", "social", "playout", "control"):
         assert forbidden not in rendered
 
@@ -398,9 +401,20 @@ def test_play_events_are_idempotent_and_drive_rolling_14_day_airtime_split(tmp_p
         "music_percent": None,
         "talking_percent": None,
     }
+    assert [item["title"] for item in status["metrics"]["recent_plays"]] == [
+        "Track music",
+        "Track old",
+    ]
+    assert status["metrics"]["top_songs_14d"] == [
+        {"title": "Track music", "artist": "RadioTEDU", "play_count": 1}
+    ]
+    assert status["metrics"]["top_genres_14d"] == [
+        {"genre": "Pop", "airtime_percent": 100}
+    ]
+    assert french["metrics"]["recent_plays"] == []
 
 
-def test_cover_upload_and_station_scoped_listener_sessions_store_no_browser_identity(tmp_path: Path) -> None:
+def test_cover_upload_works_and_listener_session_surface_does_not_exist(tmp_path: Path) -> None:
     settings = _settings(tmp_path)
     client = _client(settings)
     cover_path = "/v1/radio/stations/radiotedu-en/covers/track-1"
@@ -419,27 +433,56 @@ def test_cover_upload_and_station_scoped_listener_sessions_store_no_browser_iden
 
     uploaded = client.put(cover_path, content=cover, headers={**headers, "Content-Type": "image/png"})
     fetched = client.get(cover_path)
-    session_id = "session_1234567890abcdef"
-    started_en = client.post(
-        "/v1/radio/stations/radiotedu-en/sessions/start",
-        json={"session_id": session_id},
-        headers={"User-Agent": "must-not-be-stored"},
-    )
     status_en = client.get("/v1/radio/stations/radiotedu-en/status").json()
-    status_fr = client.get("/v1/radio/stations/radiotedu-fr/status").json()
-    ended_en = client.post(
-        "/v1/radio/stations/radiotedu-en/sessions/end",
-        json={"session_id": session_id},
-    )
 
     assert uploaded.status_code == 201
     assert fetched.content == cover
     assert fetched.headers["content-type"] == "image/png"
-    assert started_en.status_code == 200
-    assert status_en["metrics"]["active_website_listeners"] == 1
-    assert status_fr["metrics"]["active_website_listeners"] == 0
-    assert ended_en.json()["active_website_listeners"] == 0
-    assert "user-agent" not in json.dumps(status_en).lower()
+    assert client.post(
+        "/v1/radio/stations/radiotedu-en/sessions/start",
+        json={"session_id": "session_1234567890abcdef"},
+    ).status_code == 404
+    assert "active_website_listeners" not in json.dumps(status_en)
+
+
+def test_genre_is_normalized_and_private_or_control_values_are_rejected(tmp_path: Path) -> None:
+    settings = _settings(tmp_path)
+    client = _client(settings)
+    path = "/v1/radio/stations/radiotedu-en/plays"
+    now = datetime.now(timezone.utc)
+
+    accepted = _signed_post(
+        client,
+        settings,
+        path,
+        _play_event("safe-genre", "music", 1000, now, genre="  Indie   Pop  "),
+    )
+    private = _signed_post(
+        client,
+        settings,
+        path,
+        _play_event("private-genre", "music", 1000, now, genre=r"C:\private\genre"),
+    )
+    control = _signed_post(
+        client,
+        settings,
+        path,
+        _play_event("control-genre", "music", 1000, now, genre="Pop\u0000"),
+    )
+    private_title_payload = _play_event(
+        "private-title", "music", 1000, now, genre="Pop"
+    )
+    private_title_payload["track_title"] = r"C:\private\song.mp3"
+    private_title = _signed_post(
+        client, settings, path, private_title_payload
+    )
+    status = client.get("/v1/radio/stations/radiotedu-en/status").json()
+
+    assert accepted.status_code == 201
+    assert private.status_code == 422
+    assert control.status_code == 422
+    assert private_title.status_code == 422
+    assert status["metrics"]["recent_plays"][0]["genre"] == "Indie Pop"
 
 
 def test_service_scope_is_restricted_to_agent_playout(tmp_path: Path) -> None:

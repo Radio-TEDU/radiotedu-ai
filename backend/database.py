@@ -60,23 +60,13 @@ create table if not exists public_idempotency_records (
     primary key(agent_id, idempotency_key)
 );
 
-create table if not exists public_station_sessions (
-    station_id text not null,
-    session_id text not null,
-    started_at text not null,
-    last_seen_at text not null,
-    ended_at text,
-    primary key(station_id, session_id)
-);
-
 create index if not exists idx_public_play_events_airtime
     on public_play_events(station_id, occurred_at, classification);
 create index if not exists idx_public_agent_nonces_seen
     on public_agent_nonces(seen_at);
 create index if not exists idx_public_idempotency_created
     on public_idempotency_records(created_at);
-create index if not exists idx_public_station_sessions_seen
-    on public_station_sessions(station_id, last_seen_at, ended_at);
+drop table if exists public_station_sessions;
 """
 
 

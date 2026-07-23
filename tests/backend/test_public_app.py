@@ -81,12 +81,14 @@ def test_english_compatibility_status_reads_canonical_storage_and_is_flagged(tmp
     assert disabled_client.get("/api/public/status").status_code == 404
 
 
-def test_compatibility_sessions_remain_station_scoped_and_snapshot_writes_require_v1(tmp_path: Path) -> None:
+def test_listener_sessions_are_removed_and_snapshot_writes_require_v1(tmp_path: Path) -> None:
     client = TestClient(create_public_app(_settings(tmp_path), frontend_dist=_frontend(tmp_path)))
     body = {"session_id": "session_english_123456"}
 
-    assert client.post("/api/public/session/start", json=body).status_code == 200
+    assert client.post("/api/public/session/start", json=body).status_code == 404
+    assert client.post(
+        "/v1/radio/stations/radiotedu-en/sessions/start", json=body
+    ).status_code == 404
     status = client.get("/v1/radio/stations/radiotedu-en/status").json()
-    assert status["metrics"]["active_website_listeners"] == 1
-    assert client.post("/api/public/session/end", json=body).status_code == 200
+    assert "active_website_listeners" not in status["metrics"]
     assert client.post("/api/public/snapshot", json={}).status_code == 404

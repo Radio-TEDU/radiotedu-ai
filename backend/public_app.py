@@ -4,14 +4,12 @@ from datetime import date
 from pathlib import Path
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import Settings
 from .platform_api import (
-    PublicSession,
-    apply_session_operation,
     install_platform_routes,
     station_status_payload,
 )
@@ -80,24 +78,6 @@ def create_public_app(
         def compatibility_status() -> JSONResponse:
             payload = station_status_payload(settings, COMPATIBILITY_STATION_ID)
             return JSONResponse(payload, headers=compatibility_headers)
-
-        def compatibility_session(session: PublicSession, operation: str) -> JSONResponse:
-            payload = apply_session_operation(settings, COMPATIBILITY_STATION_ID, session.session_id, operation)
-            if isinstance(payload, Response):
-                return payload
-            return JSONResponse(payload, headers=compatibility_headers)
-
-        @app.post("/api/public/session/start", deprecated=True)
-        def compatibility_session_start(session: PublicSession):
-            return compatibility_session(session, "start")
-
-        @app.post("/api/public/session/heartbeat", deprecated=True)
-        def compatibility_session_heartbeat(session: PublicSession):
-            return compatibility_session(session, "heartbeat")
-
-        @app.post("/api/public/session/end", deprecated=True)
-        def compatibility_session_end(session: PublicSession):
-            return compatibility_session(session, "end")
 
     return app
 

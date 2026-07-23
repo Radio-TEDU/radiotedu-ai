@@ -39,9 +39,9 @@ export interface StationPublicSnapshot {
   next_program: StationPublicProgram | null;
   stream: {
     url: string;
-    mount: '/en' | '/fr';
+    mount: '/ai' | '/event';
     status: 'live' | 'degraded' | 'offline' | 'unknown';
-    codec: 'AAC-LC';
+    codec: 'MP3';
     bitrate_kbps: 192;
     public: true;
   };
@@ -56,13 +56,30 @@ export interface StationPublicStatusResponse {
   received_at: string | null;
   snapshot: StationPublicSnapshot | null;
   metrics: {
-    active_website_listeners: number;
     airtime: {
       window_days: 14;
       classified_duration_ms: number;
       music_percent: number | null;
       talking_percent: number | null;
     };
+    recent_plays: Array<{
+      title: string;
+      artist: string | null;
+      program_name: string | null;
+      occurred_at: string;
+      duration_ms: number;
+      genre: string | null;
+      cover_url: string | null;
+    }>;
+    top_songs_14d: Array<{
+      title: string;
+      artist: string | null;
+      play_count: number;
+    }>;
+    top_genres_14d: Array<{
+      genre: string;
+      airtime_percent: number;
+    }>;
   };
 }
 
@@ -72,18 +89,4 @@ export async function fetchStationPublicStatus(stationId: StationId): Promise<St
     throw new Error(`Station status request failed: ${response.status}`);
   }
   return response.json() as Promise<StationPublicStatusResponse>;
-}
-
-export async function postStationPublicSession(
-  stationId: StationId,
-  operation: 'start' | 'heartbeat' | 'end',
-  sessionId: string,
-  keepalive = false,
-): Promise<void> {
-  await fetch(`/v1/radio/stations/${stationId}/sessions/${operation}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session_id: sessionId }),
-    keepalive,
-  });
 }

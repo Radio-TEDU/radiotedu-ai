@@ -45,10 +45,14 @@ The EN and FR shared secrets must first be provisioned on both machines through 
 
 The broadcast supervisor pushes sanitized, station-scoped snapshots, play events and cover images to:
 
-- `https://api.radiotedu.com/v1/radio/stations/radiotedu-en/...`
-- `https://api.radiotedu.com/v1/radio/stations/radiotedu-fr/...`
+- `https://radiotedu.com/v1/radio/stations/radiotedu-en/...`
+- `https://radiotedu.com/v1/radio/stations/radiotedu-fr/...`
 
-Each request uses the `radiotedu-platform/v1` HMAC protocol implemented by `backend/public_sync.py` and verified by `backend/platform_api.py`. The website service must have distinct protected values for:
+Each request uses the `radiotedu-platform/v1` HMAC protocol verified by
+`backend/platform_api.py`. Signed snapshots truthfully identify EN as
+`https://stream.radiotedu.com/ai`, mount `/ai`, MP3 192 kbps, and FR as
+`https://stream.radiotedu.com/event`, mount `/event`, MP3 192 kbps. The
+website service must have distinct protected values for:
 
 - `RADIOTEDU_EN_SNAPSHOT_SECRET`
 - `RADIOTEDU_FR_SNAPSHOT_SECRET`

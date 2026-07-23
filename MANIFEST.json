@@ -21,28 +21,28 @@
     },
     {
         "path":  "backend/database.py",
-        "size":  3091,
-        "sha256":  "657F709499298FD01D9D337703551210693C7D1F608F81C901EF6E23DF9ABFB1"
+        "size":  2771,
+        "sha256":  "7E0A726A77CBC716696AFC5C1772E298118CCF2521668DB4484599063CF4946A"
     },
     {
         "path":  "backend/platform_api.py",
-        "size":  30343,
-        "sha256":  "666C80D550A7FCEC347B9EE69EF7924DEB6D3032A8CE5BC563198310F80D399B"
+        "size":  32910,
+        "sha256":  "FEA581843FC887E60CC67D8205A5E2DC69AC1D2811FECB5113590FC2D52D75E7"
     },
     {
         "path":  "backend/public_app.py",
-        "size":  4430,
-        "sha256":  "AD18D9BC8D3D54F528EFE1762F85F21EE51DB949719A62A73712F988956E8DA1"
+        "size":  3445,
+        "sha256":  "943274ACE9DC1E59C3AEB8B6B992D6F7179F8E2A887EBD2DD11DB4F55E056898"
     },
     {
-        "path":  "dist/frontend/assets/index-aV6Yuhc-.js",
-        "size":  157981,
-        "sha256":  "CF6BA03AC04C25DE08F1B3991A9AEED36C4DACF26D4DB5A38DBB508B11F2F8E7"
+        "path":  "dist/frontend/assets/index-CjQ2bO72.css",
+        "size":  51785,
+        "sha256":  "85319B2A377A5AB1291A5452319AC423015937040EB5CC614902141B5E2D7FF0"
     },
     {
-        "path":  "dist/frontend/assets/index-DZbhu7D0.css",
-        "size":  49925,
-        "sha256":  "7CEA4F2784C4830198F3D52995CE6FFE2AD2C2B402C315B1CB0294CDB4EBEFBB"
+        "path":  "dist/frontend/assets/index-CY_8UMHe.js",
+        "size":  159588,
+        "sha256":  "86E11C86ABDD0D51B46DC6C18A9EF3AF6277F5C062AAE532484065E82FC0429B"
     },
     {
         "path":  "dist/frontend/brand/radiotedu-logo-white.png",
@@ -61,8 +61,8 @@
     },
     {
         "path":  "dist/frontend/index.html",
-        "size":  395,
-        "sha256":  "F72BB31C523F70E67E3DE9B9725A8B5F82C266565A96A43279C6C30DEDBC64A7"
+        "size":  394,
+        "sha256":  "CB0BBA958365FE990E831BCEED40FDAB8B2CF92E1B7573E29F90ED0F00C2B249"
     },
     {
         "path":  "dist/frontend/programs/campus_frequencies.png",
@@ -146,23 +146,23 @@
     },
     {
         "path":  "frontend/src/__tests__/public-app.test.tsx",
-        "size":  3770,
-        "sha256":  "52669B1A96B539E3827B2FD0CDCED5BCF32E10E47A08848E6098F70A7FAD1F1A"
+        "size":  3482,
+        "sha256":  "6E26BCC26BBC5BBF646D14FC4BF0083FA47EC9F6269DB12E341E21B1B77CF770"
     },
     {
         "path":  "frontend/src/api.ts",
-        "size":  2519,
-        "sha256":  "4FFD0B52A27D3443900D80E275026DF3AA83D88E872E8AD8E99938C5472ABEC5"
+        "size":  2513,
+        "sha256":  "61E24B0A712B360F2F72981FDDC7B50A3A36951CF8721BF02049EA9350B8753B"
     },
     {
         "path":  "frontend/src/App.tsx",
-        "size":  2987,
-        "sha256":  "83D4F7A616918A0496412EBF5F1A7205E4CD59CC9094BB01A9D1E14210B6F426"
+        "size":  2000,
+        "sha256":  "8F5503BC083C166854F6F513ABE552C33F9FDFBBDF3FD563DAB9112B84981703"
     },
     {
         "path":  "frontend/src/components/PublicDashboard.tsx",
-        "size":  16665,
-        "sha256":  "670C74680B81A7F8A97F7B4DDB3B9953CA091CD98A5804DE177D604CB291F64D"
+        "size":  19289,
+        "sha256":  "94F80511B33ED1D5834AD1E03B67B54620B076CF29BADC84FF91EFEF9ABC3CFE"
     },
     {
         "path":  "frontend/src/main.tsx",
@@ -171,8 +171,8 @@
     },
     {
         "path":  "frontend/src/styles.css",
-        "size":  61004,
-        "sha256":  "BC603471F50D6BDCEF90B5C5443F6DBEFD91C89AA7619D198FB655FDBD09B0B4"
+        "size":  63145,
+        "sha256":  "E8304C71F731A1C0C3FB6AC5750E3397C3E96F128CA1DAC95071B43E7B8B08EB"
     },
     {
         "path":  "frontend/src/test/setup.ts",
@@ -197,12 +197,12 @@
     {
         "path":  "package.json",
         "size":  755,
-        "sha256":  "210C99CFADEDDD61D0F93C3445A87E5B01C2CBB385C09DCF4FAB5DB4C8DEA847"
+        "sha256":  "3C58A025C33AF068EDC9C430D694133E3CCE5D26C20C850DB8CEEA02CDB2423D"
     },
     {
         "path":  "package-lock.json",
         "size":  85491,
-        "sha256":  "FA679A759ECE30CDA954DD1DA46934F77535C7CFC90F8369A20D41B6F017202A"
+        "sha256":  "F4C389538161DFB641B65A774302C15CCB2C7E75EED47305D98A80899AEE9771"
     },
     {
         "path":  "packaging/web/.gitattributes",
@@ -216,13 +216,13 @@
     },
     {
         "path":  "packaging/web/BROADCAST-CONNECTION.md",
-        "size":  4615,
-        "sha256":  "12BAAFF1E2C40B325F21275B0F563C7D6AF71C0C3B1B292FC2847C7D7B942CBF"
+        "size":  4746,
+        "sha256":  "D9CA2BD7B4E8960EBC0FABA1D3C2C3BD3FA79161BD1632CF14B245853FDDF53E"
     },
     {
         "path":  "packaging/web/README.md",
-        "size":  1805,
-        "sha256":  "1A86622CFA1F45AB516AD482D2C0C835C8FEDAC65459B883A6CCCDA170F6FCAD"
+        "size":  2029,
+        "sha256":  "7188FB2696677A864B96CBCEBF166547C6D4A7506FF2ED9E39244069F75F0F47"
     },
     {
         "path":  "packaging/web/requirements-web.lock.txt",
@@ -241,27 +241,27 @@
     },
     {
         "path":  "README.md",
-        "size":  1805,
-        "sha256":  "1A86622CFA1F45AB516AD482D2C0C835C8FEDAC65459B883A6CCCDA170F6FCAD"
+        "size":  2029,
+        "sha256":  "7188FB2696677A864B96CBCEBF166547C6D4A7506FF2ED9E39244069F75F0F47"
     },
     {
         "path":  "scripts/smoke_public_server.py",
-        "size":  5089,
-        "sha256":  "081AF24405A09927FE17C038A20674F09F914F0DD175C52D5892FDF6E4909116"
+        "size":  4881,
+        "sha256":  "1FD6C222D8B2897CC14C45DA9AB84A443FF52653BFB64466CC64A738DBEBB7CF"
     },
     {
         "path":  "SERVER-CODEX-PROMPT.md",
-        "size":  14259,
-        "sha256":  "694E3391F3AE3C0DC464B537B2CB07D0223C2DFBD3F3393E7D041210F77894E8"
+        "size":  9975,
+        "sha256":  "477F47A2BFE605F79412006A1B741840C07853C2CB3AC9794BAA24C42C9CC7E5"
     },
     {
         "path":  "tests/backend/test_platform_api.py",
-        "size":  16511,
-        "sha256":  "F279F3ACCFCDB366BF195726FFC2B943222DC94A4BD34EF9D451F00F90DDDDC6"
+        "size":  17839,
+        "sha256":  "60F82D70D64EA1DC14DA6DD873CA34321F9CAA02A31F4D04A2B571E57839E608"
     },
     {
         "path":  "tests/backend/test_public_app.py",
-        "size":  3893,
-        "sha256":  "BE64A930F9004764912C22652480A453BA40F7FC540B5D70A40E55F67ED711F7"
+        "size":  3916,
+        "sha256":  "BEB63D1809276D94EF01FC5F7FCE6E1EE8B40C0882546EE55F7E1C8E28D453D5"
     }
 ]

@@ -7,13 +7,17 @@ Public contract:
 - Listener page: `https://radiotedu.com/ai`
 - English Icecast audio, temporary mount: `https://stream.radiotedu.com/ai`
 - French Icecast audio, temporary mount: `https://stream.radiotedu.com/event`
-- Versioned status/write API: `https://api.radiotedu.com/v1/radio/...`
+- Versioned status/write API: `https://radiotedu.com/v1/radio/...`
 
 There is one listener page. EN/FR selection happens inside `/ai`; `/ai/en` and `/ai/fr` do not exist. The application has no commerce, social or playout-control surface.
 
 The broadcast connection is documented in [`packaging/web/BROADCAST-CONNECTION.md`](packaging/web/BROADCAST-CONNECTION.md). The website accepts signed, sanitized state from the broadcast computer after a mutual HMAC handshake. Listener browsers play the temporary public `/ai` and `/event` stream URLs directly; this web server never proxies or administers Icecast and never remotely controls playout.
 
-The first viewport keeps the RadioTEDU AI masthead while placing the live station, now-playing title, player and anonymous active-listener count above the fold.
+The first viewport keeps the RadioTEDU AI masthead while placing the live station, now-playing title and player above the fold. The site stores no listener sessions and displays no listener count.
+
+Completed signed music plays drive bounded, station-scoped `Recently played`,
+`Top songs · last 14 days`, `Top genres · last 14 days`, and music/talking
+airtime information. No demo history is fabricated.
 
 For authorized Windows/IIS deployment, use [`SERVER-CODEX-PROMPT.md`](SERVER-CODEX-PROMPT.md) as a one-way execution prompt on the website server.
 
@@ -35,4 +39,4 @@ Then open `http://127.0.0.1:8000/ai` and run:
 .\.venv\Scripts\python.exe scripts\smoke_public_server.py --base-url http://127.0.0.1:8000 --strict --json
 ```
 
-Never commit `.env`, HMAC secrets, Icecast source credentials, databases or listener state.
+Never commit `.env`, HMAC secrets, Icecast source credentials or databases.

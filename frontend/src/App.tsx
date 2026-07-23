@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import {
   fetchStationPublicStatus,
-  postStationPublicSession,
   type PublicLanguage,
   type StationId,
   type StationPublicStatusResponse,
@@ -31,27 +30,6 @@ function App() {
     void refresh();
     const timer = window.setInterval(() => void refresh(), 5000);
     return () => window.clearInterval(timer);
-  }, [stationId]);
-
-  useEffect(() => {
-    const sessionId = createPublicSessionId();
-    let ended = false;
-    void postStationPublicSession(stationId, 'start', sessionId);
-    const heartbeat = window.setInterval(
-      () => void postStationPublicSession(stationId, 'heartbeat', sessionId),
-      20_000,
-    );
-    const endSession = () => {
-      if (ended) return;
-      ended = true;
-      void postStationPublicSession(stationId, 'end', sessionId, true);
-    };
-    window.addEventListener('pagehide', endSession);
-    return () => {
-      window.clearInterval(heartbeat);
-      window.removeEventListener('pagehide', endSession);
-      endSession();
-    };
   }, [stationId]);
 
   if (error && !status) {
@@ -89,14 +67,6 @@ function App() {
       onLanguageChange={setLanguage}
     />
   );
-}
-
-function createPublicSessionId(): string {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
-  }
-  const random = Math.random().toString(36).slice(2);
-  return `session_${Date.now().toString(36)}_${random.padEnd(16, '0')}`;
 }
 
 export default App;
