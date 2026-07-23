@@ -275,6 +275,11 @@ export function PublicDashboard({ status, language, connectionError, onLanguageC
           </dl>
           <audio ref={audioRef} preload="none" src={streamUrl} aria-label={copy.player} onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} />
         </aside>
+
+        <div className="rtfm__intro-mobile-copy">
+          <h2>{copy.title}</h2>
+          <p className="rtfm__lede">{copy.intro}</p>
+        </div>
       </section>
 
       <section className="rtfm__capabilities" aria-labelledby="capability-title">

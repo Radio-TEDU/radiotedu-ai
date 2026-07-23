@@ -1,4 +1,4 @@
-﻿[
+[
     {
         "path":  ".gitattributes",
         "size":  141,
@@ -35,14 +35,14 @@
         "sha256":  "943274ACE9DC1E59C3AEB8B6B992D6F7179F8E2A887EBD2DD11DB4F55E056898"
     },
     {
-        "path":  "dist/frontend/assets/index-CjQ2bO72.css",
-        "size":  51785,
-        "sha256":  "85319B2A377A5AB1291A5452319AC423015937040EB5CC614902141B5E2D7FF0"
+        "path":  "dist/frontend/assets/index-8KwSuENK.js",
+        "size":  159747,
+        "sha256":  "A71E48B0E05E5E96EABF281F5732F40FEADAF5B945238904D8F8715B1C5FEA59"
     },
     {
-        "path":  "dist/frontend/assets/index-CY_8UMHe.js",
-        "size":  159588,
-        "sha256":  "86E11C86ABDD0D51B46DC6C18A9EF3AF6277F5C062AAE532484065E82FC0429B"
+        "path":  "dist/frontend/assets/index-BClIYrlU.css",
+        "size":  52615,
+        "sha256":  "2C201C1E62DBBABCA0EEC68F107AA96B6F2B64B50666C5A712C24A06BE2D5A28"
     },
     {
         "path":  "dist/frontend/brand/radiotedu-logo-white.png",
@@ -62,7 +62,7 @@
     {
         "path":  "dist/frontend/index.html",
         "size":  394,
-        "sha256":  "CB0BBA958365FE990E831BCEED40FDAB8B2CF92E1B7573E29F90ED0F00C2B249"
+        "sha256":  "34B40C11C900F84A083FFCC8EB6EB32CF00A1B297EDE697D3E53464250A76758"
     },
     {
         "path":  "dist/frontend/programs/campus_frequencies.png",
@@ -161,8 +161,8 @@
     },
     {
         "path":  "frontend/src/components/PublicDashboard.tsx",
-        "size":  19289,
-        "sha256":  "94F80511B33ED1D5834AD1E03B67B54620B076CF29BADC84FF91EFEF9ABC3CFE"
+        "size":  19440,
+        "sha256":  "B5B0287B68CA852C0C63C07232EAE9E143B8133616E72407A5633F4E0C94D046"
     },
     {
         "path":  "frontend/src/main.tsx",
@@ -171,8 +171,8 @@
     },
     {
         "path":  "frontend/src/styles.css",
-        "size":  63145,
-        "sha256":  "E8304C71F731A1C0C3FB6AC5750E3397C3E96F128CA1DAC95071B43E7B8B08EB"
+        "size":  64107,
+        "sha256":  "5C57F9DEF245BC7238D4E5DAA005A0898A4E3A2D586258477B84026F21D5CF4F"
     },
     {
         "path":  "frontend/src/test/setup.ts",
@@ -197,12 +197,12 @@
     {
         "path":  "package.json",
         "size":  755,
-        "sha256":  "3C58A025C33AF068EDC9C430D694133E3CCE5D26C20C850DB8CEEA02CDB2423D"
+        "sha256":  "4556CE80B12CD352946B36BF4704B720EB16236A90998BAB335581837985DE89"
     },
     {
         "path":  "package-lock.json",
         "size":  85491,
-        "sha256":  "F4C389538161DFB641B65A774302C15CCB2C7E75EED47305D98A80899AEE9771"
+        "sha256":  "5C0C50CF13741B91736AC1B291F2AD93CE8BEA33FA9FBA88451D71892C10F0DB"
     },
     {
         "path":  "packaging/web/.gitattributes",
@@ -251,8 +251,8 @@
     },
     {
         "path":  "SERVER-CODEX-PROMPT.md",
-        "size":  9975,
-        "sha256":  "477F47A2BFE605F79412006A1B741840C07853C2CB3AC9794BAA24C42C9CC7E5"
+        "size":  10075,
+        "sha256":  "53470CD983645DCE93606EBE5E5216C4A99B665CF1B8F2D0ABE39BAEEDA12F99"
     },
     {
         "path":  "tests/backend/test_platform_api.py",

@@ -8,11 +8,11 @@ WordPress/IIS routes, and never print a credential or secret.
 ## Immutable source
 
 - Repository: `https://github.com/Radio-TEDU/radiotedu-ai.git`
-- Release tag: `v1.0.5`
-- Release page: `https://github.com/Radio-TEDU/radiotedu-ai/releases/tag/v1.0.5`
+- Release tag: `v1.0.6`
+- Release page: `https://github.com/Radio-TEDU/radiotedu-ai/releases/tag/v1.0.6`
 
 Clone into a new versioned server directory, fetch tags, check out detached
-`v1.0.5`, record the resolved commit, and verify every entry in
+`v1.0.6`, record the resolved commit, and verify every entry in
 `MANIFEST.json`. Do not deploy a moving branch, the old `v1.0.4` release, or a
 locally reconstructed copy.
 
@@ -69,7 +69,9 @@ metadata to the browser.
 
 ## Corrected broadcast contract
 
-Release `v1.0.5` fixes the `v1.0.4` validator mismatch. The signed snapshot
+Release `v1.0.6` fixes the `v1.0.4` validator mismatch and keeps the RadioTEDU
+AI masthead plus live listener panel in the initial 390x844 mobile viewport.
+The signed snapshot
 contract is now the same as the real public audio:
 
 - EN: URL `https://stream.radiotedu.com/ai`, mount `/ai`, codec `MP3`,

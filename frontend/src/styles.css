@@ -56,6 +56,7 @@
 .rtfm__intro h1 em { color: var(--rt-red); font-family: Georgia, serif; font-weight: 400; }
 .rtfm__intro h2 { max-width: 18ch; margin: clamp(2rem, 4vw, 3.5rem) 0 1.35rem; font-size: clamp(1.8rem, 3.4vw, 3.8rem); line-height: 0.96; letter-spacing: -0.055em; }
 .rtfm__lede { max-width: 720px; margin: 0; color: #4f4c46; font-size: clamp(1rem, 1.25vw, 1.22rem); line-height: 1.6; }
+.rtfm__intro-mobile-copy { display: none; }
 
 .rtfm__hero-listener {
   align-self: stretch;
@@ -194,13 +195,26 @@
 }
 
 @media (max-width: 620px) {
-  .rtfm__nav { grid-template-columns: 1fr auto; min-height: 82px; padding: 0.8rem 1rem; }
-  .rtfm__brand img { width: 168px; }
-  .rtfm__rtai { grid-column: 1 / -1; justify-content: space-between; }
-  .rtfm__intro { padding: 2.5rem 1rem 3rem; }
-  .rtfm__intro h1 { font-size: clamp(3.9rem, 22vw, 6.5rem); }
-  .rtfm__hero-listener { min-height: 500px; padding: 1.1rem; box-shadow: 8px 8px 0 rgba(9, 9, 9, 0.1); }
-  .rtfm__hero-facts { grid-template-columns: 1fr; }
+  .rtfm__nav { grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.65rem; min-height: 76px; padding: 0.65rem 1rem; }
+  .rtfm__brand img { width: clamp(118px, 35vw, 150px); }
+  .rtfm__language button { min-width: 42px; padding: 0.52rem 0.62rem; }
+  .rtfm__rtai { grid-column: auto; justify-content: flex-end; }
+  .rtfm__rtai span { display: none; }
+  .rtfm__rtai img { width: 68px; height: 32px; padding: 4px 6px; }
+  .rtfm__intro { gap: 1rem; padding: 1rem 1rem 2.5rem; }
+  .rtfm__kicker { margin-bottom: 0.65rem; font-size: 0.6rem; }
+  .rtfm__intro h1 { max-width: 100%; font-size: clamp(3.15rem, 15vw, 4.5rem); line-height: 0.86; }
+  .rtfm__intro-copy > h2, .rtfm__intro-copy > .rtfm__lede { display: none; }
+  .rtfm__intro-mobile-copy { display: block; padding-top: 0.75rem; }
+  .rtfm__intro-mobile-copy h2 { margin: 0 0 0.9rem; font-size: clamp(1.7rem, 8vw, 2.4rem); }
+  .rtfm__hero-listener { min-height: 420px; padding: 1rem; box-shadow: 8px 8px 0 rgba(9, 9, 9, 0.1); }
+  .rtfm__hero-now { padding: 1.2rem 0; }
+  .rtfm__hero-now h3 { font-size: clamp(2rem, 11vw, 3.25rem); }
+  .rtfm__hero-controls { padding: 1rem 0; }
+  .rtfm__play { width: 58px; height: 58px; }
+  .rtfm__hero-facts { grid-template-columns: 0.9fr 1.1fr; }
+  .rtfm__hero-facts div { min-height: 88px; padding: 0.8rem; }
+  .rtfm__hero-facts dd { min-height: 50px; font-size: clamp(1rem, 4.5vw, 1.3rem); }
   .rtfm__capabilities > div, .rtfm__programs, .rtfm__principles { grid-template-columns: 1fr; }
   .rtfm__station { padding-inline: 1rem; }
   .rtfm__cover-brand, .rtfm__cover-title { right: 1rem; left: 1rem; }
