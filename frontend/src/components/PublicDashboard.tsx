@@ -145,8 +145,8 @@ const TAG_LABELS: Record<PublicLanguage, Record<SoundTag, string>> = {
 };
 
 const STREAMS: Record<PublicLanguage, string> = {
-  en: 'https://stream.radiotedu.com/en',
-  fr: 'https://stream.radiotedu.com/fr',
+  en: 'https://stream.radiotedu.com/ai',
+  fr: 'https://stream.radiotedu.com/event',
 };
 
 function scheduledProgramNow(): ProgramKey {
@@ -186,7 +186,9 @@ export function PublicDashboard({ status, language, connectionError, onLanguageC
   const tags = snapshot?.editorial.sound_tags ?? [];
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
-  const streamUrl = snapshot?.stream.url || STREAMS[language];
+  // Stream routing is a website release decision. Never let a delayed status
+  // snapshot silently switch the listener to a different Icecast mount.
+  const streamUrl = STREAMS[language];
   const live = Boolean(status.online && snapshot?.stream.status === 'live');
   const delayed = Boolean(connectionError || status.stale);
   const currentProgram = useMemo(() => localizedProgram(snapshot?.current_program?.id, language), [snapshot?.current_program?.id, language]);

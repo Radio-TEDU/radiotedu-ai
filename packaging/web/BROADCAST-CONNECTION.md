@@ -22,8 +22,8 @@ The website accepts public state only. It exposes no broadcast start/stop, playl
 
 The listener browser plays the two existing public stream services directly:
 
-- English: `https://stream.radiotedu.com/en`
-- French: `https://stream.radiotedu.com/fr`
+- English (temporary public mount): `https://stream.radiotedu.com/ai`
+- French (temporary public mount): `https://stream.radiotedu.com/event`
 
 The website server does not host, proxy, configure or administer these streams. Do not add an IIS binding, ARR rule or private Icecast upstream on the website server. Stream availability is owned by the existing stream service and does not block deployment of an otherwise healthy `/ai` website.
 
@@ -31,6 +31,6 @@ No private Icecast host, port or source credential may appear in browser HTML, t
 
 ## 3. Browser → public website
 
-The browser loads one listener page at `https://radiotedu.com/ai`. Its in-page selector chooses between the exact public stream URLs `https://stream.radiotedu.com/en` and `https://stream.radiotedu.com/fr`. It polls only sanitized status endpoints on the website origin/API. `/ai/en` and `/ai/fr` do not exist.
+The browser loads one listener page at `https://radiotedu.com/ai`. Its in-page selector chooses between the exact temporary public stream URLs `https://stream.radiotedu.com/ai` for English and `https://stream.radiotedu.com/event` for French. It polls only sanitized status endpoints on the website origin/API. `/ai/en` and `/ai/fr` do not exist. The website route and the Icecast `/ai` mount are on different hostnames and must not be conflated.
 
 Run `packaging/web/verify-website-runtime.ps1` on the website server after configuring the loopback public app. It verifies `/ai`, both public status endpoints, the two exact browser stream URLs, and the absence of private Icecast or operator-control references.

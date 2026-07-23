@@ -35,9 +35,9 @@
         "sha256":  "AD18D9BC8D3D54F528EFE1762F85F21EE51DB949719A62A73712F988956E8DA1"
     },
     {
-        "path":  "dist/frontend/assets/index-BNomsHt9.js",
-        "size":  157242,
-        "sha256":  "1675A875214CE06E2FD3FAFF508403CF7FAAD5DA52241913DF1469F481CA2C3F"
+        "path":  "dist/frontend/assets/index-C14z26Sb.js",
+        "size":  157230,
+        "sha256":  "A6E77535F3790F75A74E5DB537A495995A0435E2ECFE9B9260CC3DEA53CB0E53"
     },
     {
         "path":  "dist/frontend/assets/index-CSxj5TIb.css",
@@ -62,7 +62,7 @@
     {
         "path":  "dist/frontend/index.html",
         "size":  395,
-        "sha256":  "01306B5AA630B04C0816EC37760885B0D24CA210EE3AA52A448BA3DADC787660"
+        "sha256":  "2598C269F16929684E36DF3F64F1834059623A4302FCAEF9DAE4187C14C14FB1"
     },
     {
         "path":  "dist/frontend/programs/campus_frequencies.png",
@@ -161,8 +161,8 @@
     },
     {
         "path":  "frontend/src/components/PublicDashboard.tsx",
-        "size":  15770,
-        "sha256":  "8CE31EB3473258954895C3DA8003FD2B8E1CC9FF17F34553BC11CABF50370F53"
+        "size":  15900,
+        "sha256":  "81C464ABEA087A32DBE91A4DA3C7348BDDB420731AF2A71E59485EFE01A55876"
     },
     {
         "path":  "frontend/src/main.tsx",
@@ -197,12 +197,12 @@
     {
         "path":  "package.json",
         "size":  755,
-        "sha256":  "4D57609FEB7597DAE124658CA04001F8792EE4525D41BAE0C4F136E29A0971B0"
+        "sha256":  "8A91D9F6C8A2C9C722FB1F0FD14A6B08293FA9195B989E72930C7FABD17E963F"
     },
     {
         "path":  "package-lock.json",
         "size":  85491,
-        "sha256":  "14021A0E15F68419BC4CFD3349AA5FC63A90BE3777B46314D907402B443132BB"
+        "sha256":  "90C64B9252FA35AE06411CC82A4926663377D8A287675956F075319575445A96"
     },
     {
         "path":  "packaging/web/.gitattributes",
@@ -216,13 +216,13 @@
     },
     {
         "path":  "packaging/web/BROADCAST-CONNECTION.md",
-        "size":  2554,
-        "sha256":  "8C9E0DFE88F0E6E7518FC464F77A488C540F046AD83A4AD58ECB7C8980B77394"
+        "size":  2743,
+        "sha256":  "C3CE2582131A7E46C99ED6D5221664E282DD21F9E60DE11A45EA3307D746B385"
     },
     {
         "path":  "packaging/web/README.md",
-        "size":  1572,
-        "sha256":  "E3F5F4C3CF2B8E9EC176220C3952513944F7DB983657BBB22BB4EB8FC6AF6B82"
+        "size":  1609,
+        "sha256":  "258B185E9C10A15646ACE5B90A67391315605BD11DE369E682BE6EEE9DDDE987"
     },
     {
         "path":  "packaging/web/requirements-web.lock.txt",
@@ -231,8 +231,8 @@
     },
     {
         "path":  "packaging/web/verify-website-runtime.ps1",
-        "size":  2399,
-        "sha256":  "F051E03E195432ACAF615232156D54776DD90D493EF2F39900965E0A55FD5B7A"
+        "size":  2405,
+        "sha256":  "8E990389A2AB934059B4A792AA959D813247170836E2F7EBDA789479C326CAC7"
     },
     {
         "path":  "packaging/web/web.env.example",
@@ -241,8 +241,8 @@
     },
     {
         "path":  "README.md",
-        "size":  1572,
-        "sha256":  "E3F5F4C3CF2B8E9EC176220C3952513944F7DB983657BBB22BB4EB8FC6AF6B82"
+        "size":  1609,
+        "sha256":  "258B185E9C10A15646ACE5B90A67391315605BD11DE369E682BE6EEE9DDDE987"
     },
     {
         "path":  "scripts/smoke_public_server.py",
@@ -251,8 +251,8 @@
     },
     {
         "path":  "SERVER-CODEX-PROMPT.md",
-        "size":  11613,
-        "sha256":  "2AE2D9D883AF948B1F1BCD5BF16C7EBF5DAE5F98C3FEB1A39B3F032DA7CAE3FC"
+        "size":  12228,
+        "sha256":  "98660DE2D11C0CB3F36E859AAFFBBBBFFE95B2553AA59489E98546189EF07F23"
     },
     {
         "path":  "tests/backend/test_platform_api.py",

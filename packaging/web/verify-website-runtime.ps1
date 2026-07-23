@@ -37,8 +37,8 @@ $http = [ordered]@{
 $javascript = Get-ChildItem -LiteralPath (Join-Path $FrontendDist "assets") -Filter "*.js" -File |
     ForEach-Object { [IO.File]::ReadAllText($_.FullName) }
 $bundle = $javascript -join "`n"
-$englishStream = $bundle.Contains("https://stream.radiotedu.com/en")
-$frenchStream = $bundle.Contains("https://stream.radiotedu.com/fr")
+$englishStream = $bundle.Contains("https://stream.radiotedu.com/ai")
+$frenchStream = $bundle.Contains("https://stream.radiotedu.com/event")
 $privateIcecastAbsent = $bundle -notmatch '10\.98\.98\.75|:11154'
 $operatorControlsAbsent = $bundle -notmatch '/api/air|/api/control|radiotedu_admin_token|OperatorApp'
 $httpReady = @($http.Values | Where-Object { $_ -eq 200 }).Count -eq 3
@@ -54,8 +54,8 @@ $ok = [bool](
     checked_at = (Get-Date).ToUniversalTime().ToString("o")
     loopback_http_status = $http
     browser_streams = [ordered]@{
-        english = "https://stream.radiotedu.com/en"
-        french = "https://stream.radiotedu.com/fr"
+        english = "https://stream.radiotedu.com/ai"
+        french = "https://stream.radiotedu.com/event"
         english_present = $englishStream
         french_present = $frenchStream
     }

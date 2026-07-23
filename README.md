@@ -5,8 +5,8 @@ Website-only RadioTEDU AI listener and public status service.
 Public contract:
 
 - Listener page: `https://radiotedu.com/ai`
-- English Icecast audio: `https://stream.radiotedu.com/en`
-- French Icecast audio: `https://stream.radiotedu.com/fr`
+- English Icecast audio, temporary mount: `https://stream.radiotedu.com/ai`
+- French Icecast audio, temporary mount: `https://stream.radiotedu.com/event`
 - Versioned status/write API: `https://api.radiotedu.com/v1/radio/...`
 
 There is one listener page. EN/FR selection happens inside `/ai`; `/ai/en` and `/ai/fr` do not exist. The application has no commerce, social or playout-control surface.
