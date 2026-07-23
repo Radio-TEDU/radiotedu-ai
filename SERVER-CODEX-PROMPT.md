@@ -7,8 +7,8 @@ You are Codex running on the authorized RadioTEDU Windows/IIS website server. Th
 Clone the public repository and check out the exact release tag below. Do not deploy another branch, a moving default branch, or an unverified local copy.
 
 - Repository: `https://github.com/Radio-TEDU/radiotedu-ai.git`
-- Web release tag: `v1.0.1`
-- Release page: `https://github.com/Radio-TEDU/radiotedu-ai/releases/tag/v1.0.1`
+- Web release tag: `v1.0.2`
+- Release page: `https://github.com/Radio-TEDU/radiotedu-ai/releases/tag/v1.0.2`
 
 The release contains the website source, supplied brand assets, six program covers, the website-only API, broadcast-connection contract, verification scripts and locked dependencies. It contains no music library, jingles, voice assets or credentials.
 
@@ -77,7 +77,7 @@ The website server verifies distinct EN and FR HMAC secrets. Obtain them only fr
 
 ## Execute
 
-1. Clone `https://github.com/Radio-TEDU/radiotedu-ai.git` into a new versioned server directory, fetch tags, check out detached tag `v1.0.1`, and record the resolved commit SHA. Verify every file listed in `MANIFEST.json` before continuing. Do not deploy the default branch or discard server-owned data.
+1. Clone `https://github.com/Radio-TEDU/radiotedu-ai.git` into a new versioned server directory, fetch tags, check out detached tag `v1.0.2`, and record the resolved commit SHA. Verify every file listed in `MANIFEST.json` before continuing. Do not deploy the default branch or discard server-owned data.
 2. Back up the current IIS configuration and current `/ai` WordPress mapping/content in a recoverable, timestamped server-only location. Record exact rollback commands without exposing secrets.
 3. Confirm these required files exist: `backend/public_app.py`, `backend/platform_api.py`, `frontend/src/components/PublicDashboard.tsx`, `frontend/public/brand`, `frontend/public/programs`, `scripts/smoke_public_server.py`.
 4. Create an isolated Python environment, install `packaging/web/requirements-web.lock.txt`, run `npm ci`, and run `npm run build`. Confirm `dist/frontend/brand` and all six `dist/frontend/programs/*.png` files exist.
@@ -86,11 +86,11 @@ The website server verifies distinct EN and FR HMAC secrets. Obtain them only fr
 7. Install `python -m backend.public_app` as a durable least-privilege Windows service bound to loopback. Enable automatic restart and health logging with secret redaction. Do not install the operator app.
 8. Configure IIS/ARR so only these application paths reach the public app: `/ai`, `/assets/*`, `/brand/*`, `/programs/*`, `/v1/radio/*`, and `/openapi.json` if intentionally public. Ensure `/ai/en` and `/ai/fr` return 404. Preserve all unrelated WordPress routes.
 9. Configure `api.radiotedu.com` HTTPS binding/reverse proxy to the same public app's versioned API. If public DNS for this hostname is absent, configure IIS and certificate readiness but do not silently substitute another canonical origin; record the DNS dependency.
-10. Build the broadcast-server connection exactly as specified in `packaging/web/BROADCAST-CONNECTION.md`. The broadcast computer pushes signed EN/FR status and play events to `https://api.radiotedu.com/v1/radio/...`; the web server verifies station-bound HMAC headers using distinct protected secrets. The website server never sends playout commands to the broadcast computer.
-11. Configure `stream.radiotedu.com` as an Icecast-only HTTPS reverse proxy. Proxy only `/en` and `/fr` to the private broadcast/Icecast upstream `10.98.98.75:11154` matching mounts. Preserve streaming responses, ICY metadata and long-lived connections; disable response buffering for these locations. It must not serve HTML, API or application routes. Reject admin, source and status endpoints on this hostname. Do not expose the Icecast admin interface or private source port. A 404 mount response before the broadcast source connects is acceptable staging evidence; it is not permission to publish HTML at these paths.
-12. Run `packaging/web/verify-broadcast-connection.ps1` from the website server. Require private TCP reachability to `10.98.98.75:11154`, healthy loopback EN/FR public API status endpoints, and an explicit result for both Icecast mounts. Never place a source password in this script or IIS configuration.
-13. Apply proxy limits before forwarding: 256 KiB for snapshots and play events, 5 MiB for covers. Keep application-side bounded reads as defense in depth.
-14. Run the full verification gate below. If it passes, switch only the exact approved bindings/routes to the new service, verify from the public hostnames, and retain the rollback backup. If a required gate fails, roll back the changed route/binding and keep the verified staging service available only on loopback.
+10. Build only the signed status connection specified in `packaging/web/BROADCAST-CONNECTION.md`. The broadcast computer pushes signed EN/FR status and play events to `https://api.radiotedu.com/v1/radio/...`; the web server verifies station-bound HMAC headers using distinct protected secrets. The website server never connects to Icecast and never sends playout commands to the broadcast computer.
+11. Do not create, modify, proxy, bind or administer `stream.radiotedu.com` on this website server. The website's two browser audio elements must point directly to the already-operated public URLs `https://stream.radiotedu.com/en` and `https://stream.radiotedu.com/fr`. Treat their availability as an external stream-service state, not as a website-server deployment responsibility.
+12. Run `packaging/web/verify-website-runtime.ps1` from the website server. Require healthy loopback `/ai` and EN/FR status endpoints, require both exact public stream URLs in the built browser bundle, and reject any private Icecast address or operator-control path in that bundle.
+13. Apply API proxy limits before forwarding: 256 KiB for snapshots and play events, 5 MiB for covers. Keep application-side bounded reads as defense in depth.
+14. Run the full verification gate below. If it passes, switch only the exact approved website/API/asset routes to the new service, verify from the public hostnames, and retain the rollback backup. If a required gate fails, roll back the changed route/binding and keep the verified staging service available only on loopback.
 
 ## Verification gate
 
@@ -115,7 +115,7 @@ Then verify from the public side:
 - 14-day airtime aggregation, rounding, empty history and curated tag fallback are correct;
 - HMAC identity/scope/station/path binding, stale timestamps, nonce replay, idempotency, sequence rollback, private/oversized payload rejection, stable redaction and correlation IDs pass;
 - public OpenAPI and rendered UI expose no commerce, engagement, operator or playout-control surface;
-- `stream.radiotedu.com` presents valid TLS and serves audio only on `/en` and `/fr`;
+- the built website points directly to `https://stream.radiotedu.com/en` and `https://stream.radiotedu.com/fr`; no IIS/ARR stream proxy or private Icecast address exists on this server;
 - no generated or transferred file contains an Icecast source credential.
 
 ## Required local report; no conversational handoff

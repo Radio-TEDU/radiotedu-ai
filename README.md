@@ -11,7 +11,7 @@ Public contract:
 
 There is one listener page. EN/FR selection happens inside `/ai`; `/ai/en` and `/ai/fr` do not exist. The application has no commerce, social or playout-control surface.
 
-The broadcast connection is documented in [`packaging/web/BROADCAST-CONNECTION.md`](packaging/web/BROADCAST-CONNECTION.md). The website accepts signed, sanitized state from the broadcast computer and reverse-proxies public audio from private Icecast. It never remotely controls playout.
+The broadcast connection is documented in [`packaging/web/BROADCAST-CONNECTION.md`](packaging/web/BROADCAST-CONNECTION.md). The website accepts signed, sanitized state from the broadcast computer. Listener browsers play the existing public `/en` and `/fr` stream URLs directly; this web server never proxies or administers Icecast and never remotely controls playout.
 
 For authorized Windows/IIS deployment, use [`SERVER-CODEX-PROMPT.md`](SERVER-CODEX-PROMPT.md) as a one-way execution prompt on the website server.
 

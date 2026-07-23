@@ -18,19 +18,19 @@ The broadcast computer must use matching station-specific values. Obtain them fr
 
 The website accepts public state only. It exposes no broadcast start/stop, playlist, Liquidsoap, TTS, request or admin command endpoint.
 
-## 2. Website stream proxy → private Icecast
+## 2. Browser → existing public streams
 
-IIS/ARR for `stream.radiotedu.com` proxies only:
+The listener browser plays the two existing public stream services directly:
 
-- `/en` → `http://10.98.98.75:11154/en`
-- `/fr` → `http://10.98.98.75:11154/fr`
+- English: `https://stream.radiotedu.com/en`
+- French: `https://stream.radiotedu.com/fr`
 
-Preserve streaming bodies, `Content-Type`, ICY metadata headers, cache prevention and long-lived connections. Disable proxy response buffering for these routes. Do not proxy `/admin`, `/status-json.xsl`, `/server_version.xsl`, source endpoints, directory listings or any other upstream path. The private host and port must never appear in browser HTML or public API payloads.
+The website server does not host, proxy, configure or administer these streams. Do not add an IIS binding, ARR rule or private Icecast upstream on the website server. Stream availability is owned by the existing stream service and does not block deployment of an otherwise healthy `/ai` website.
 
-The reverse proxy does not need and must not store an Icecast source password. The source credentials exist only on the broadcast computer.
+No private Icecast host, port or source credential may appear in browser HTML, the public API, website configuration or deployment reports.
 
 ## 3. Browser → public website
 
 The browser loads one listener page at `https://radiotedu.com/ai`. Its in-page selector chooses between the exact public stream URLs `https://stream.radiotedu.com/en` and `https://stream.radiotedu.com/fr`. It polls only sanitized status endpoints on the website origin/API. `/ai/en` and `/ai/fr` do not exist.
 
-Run `packaging/web/verify-broadcast-connection.ps1` on the website server after configuring the loopback public app and private Icecast route. A private mount HTTP 404 is acceptable before a source connects, but private TCP failure or an unhealthy loopback API is not.
+Run `packaging/web/verify-website-runtime.ps1` on the website server after configuring the loopback public app. It verifies `/ai`, both public status endpoints, the two exact browser stream URLs, and the absence of private Icecast or operator-control references.

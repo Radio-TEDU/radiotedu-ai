@@ -15,19 +15,14 @@
         "sha256":  "C5BF8BED315A27A19FF5319583FE216A9F0FF7A140C8FA371774BA5A46652A3F"
     },
     {
-        "path":  "backend/audio/processing.py",
-        "size":  1695,
-        "sha256":  "7139045100F42CB4920F4FA5841F04EE2C4D97700B4D3479A46BD3B060F1B17D"
-    },
-    {
         "path":  "backend/config.py",
         "size":  11954,
         "sha256":  "AA025AB4FC1112FF5633816C83FCF4B6DB35CDD993630CD8B9BDE63EAA025CA7"
     },
     {
         "path":  "backend/database.py",
-        "size":  39307,
-        "sha256":  "C739355B75F91EDA615CD031F4DABA80A53A2663E41BFD209A5B070F85343DAB"
+        "size":  3091,
+        "sha256":  "657F709499298FD01D9D337703551210693C7D1F608F81C901EF6E23DF9ABFB1"
     },
     {
         "path":  "backend/platform_api.py",
@@ -38,26 +33,6 @@
         "path":  "backend/public_app.py",
         "size":  4430,
         "sha256":  "AD18D9BC8D3D54F528EFE1762F85F21EE51DB949719A62A73712F988956E8DA1"
-    },
-    {
-        "path":  "backend/stations/__init__.py",
-        "size":  161,
-        "sha256":  "B5C73FA74CDDCC0F7B0A01B0766F7D20B9C7920AD3668BAE75FB18716CB2B2B3"
-    },
-    {
-        "path":  "backend/stations/context.py",
-        "size":  7410,
-        "sha256":  "BC99D86C348F0F283ECA8016097A7486D77D3B2BA74B3AF591F57258960DD8FC"
-    },
-    {
-        "path":  "backend/stations/loader.py",
-        "size":  14087,
-        "sha256":  "D09AC040BA561A6C4DCD01BE0C81FCCE4E282A07959D90F16C51875F49C69A89"
-    },
-    {
-        "path":  "backend/stations/models.py",
-        "size":  1203,
-        "sha256":  "4A05FD74B4DD291D5606CBAB6430A143A055811936E569389CA725C6D7E24976"
     },
     {
         "path":  "dist/frontend/assets/index-BNomsHt9.js",
@@ -222,12 +197,12 @@
     {
         "path":  "package.json",
         "size":  755,
-        "sha256":  "D37436CDDF23F96DC1FAD70155C5CB49DDD20E4940571C6068B6191F8988E39A"
+        "sha256":  "4D57609FEB7597DAE124658CA04001F8792EE4525D41BAE0C4F136E29A0971B0"
     },
     {
         "path":  "package-lock.json",
         "size":  85491,
-        "sha256":  "3529A13E75CB98DE1C692064CE071C9514AC2308F418B8BFDBF07CAA54969DEA"
+        "sha256":  "14021A0E15F68419BC4CFD3349AA5FC63A90BE3777B46314D907402B443132BB"
     },
     {
         "path":  "packaging/web/.gitattributes",
@@ -241,13 +216,13 @@
     },
     {
         "path":  "packaging/web/BROADCAST-CONNECTION.md",
-        "size":  2612,
-        "sha256":  "4FFBF21716DB5ED18F113113A2107092E3D56694C86D90FA384A3EA8B0F15D16"
+        "size":  2554,
+        "sha256":  "8C9E0DFE88F0E6E7518FC464F77A488C540F046AD83A4AD58ECB7C8980B77394"
     },
     {
         "path":  "packaging/web/README.md",
-        "size":  1491,
-        "sha256":  "050C4A45FD277F479A7C3F51C301BFCB35C04E40CE35EA1A6D51729654A9A820"
+        "size":  1572,
+        "sha256":  "E3F5F4C3CF2B8E9EC176220C3952513944F7DB983657BBB22BB4EB8FC6AF6B82"
     },
     {
         "path":  "packaging/web/requirements-web.lock.txt",
@@ -255,9 +230,9 @@
         "sha256":  "6839B7F7BED311051BA905012F49B738E142ACE594099F2529ACC81527B0805B"
     },
     {
-        "path":  "packaging/web/verify-broadcast-connection.ps1",
-        "size":  1927,
-        "sha256":  "7EEBD24225CE4EC9BDADE6C7B14D2AC4F78EFB87C07737E5F88155FD0013613D"
+        "path":  "packaging/web/verify-website-runtime.ps1",
+        "size":  2399,
+        "sha256":  "F051E03E195432ACAF615232156D54776DD90D493EF2F39900965E0A55FD5B7A"
     },
     {
         "path":  "packaging/web/web.env.example",
@@ -266,8 +241,8 @@
     },
     {
         "path":  "README.md",
-        "size":  1491,
-        "sha256":  "050C4A45FD277F479A7C3F51C301BFCB35C04E40CE35EA1A6D51729654A9A820"
+        "size":  1572,
+        "sha256":  "E3F5F4C3CF2B8E9EC176220C3952513944F7DB983657BBB22BB4EB8FC6AF6B82"
     },
     {
         "path":  "scripts/smoke_public_server.py",
@@ -276,8 +251,8 @@
     },
     {
         "path":  "SERVER-CODEX-PROMPT.md",
-        "size":  11741,
-        "sha256":  "A7EC688205905A4A0E376AA4E0955596B776DFA9B6FCDC2766F4C97DD901D428"
+        "size":  11613,
+        "sha256":  "2AE2D9D883AF948B1F1BCD5BF16C7EBF5DAE5F98C3FEB1A39B3F032DA7CAE3FC"
     },
     {
         "path":  "tests/backend/test_platform_api.py",
