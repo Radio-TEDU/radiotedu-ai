@@ -228,10 +228,35 @@ export function PublicDashboard({ status, language, connectionError, onLanguageC
       </header>
 
       <section className="rtfm__intro">
-        <p className="rtfm__kicker">{copy.kicker}</p>
-        <h1>RadioTEDU <em>AI</em></h1>
-        <h2>{copy.title}</h2>
-        <p className="rtfm__lede">{copy.intro}</p>
+        <div className="rtfm__intro-copy">
+          <p className="rtfm__kicker">{copy.kicker}</p>
+          <h1>RadioTEDU <em>AI</em></h1>
+          <h2>{copy.title}</h2>
+          <p className="rtfm__lede">{copy.intro}</p>
+        </div>
+
+        <aside className="rtfm__hero-listener" aria-label={`${copy.station} listener`}>
+          <div className="rtfm__hero-status">
+            <span className={`rtfm__live${live ? ' is-live' : ''}`}><i />{delayed ? copy.delayed : live ? copy.live : copy.offline}</span>
+            <strong>{copy.station}</strong>
+          </div>
+          <div className="rtfm__hero-now">
+            <p>{copy.now}</p>
+            <h3>{snapshot?.now_playing?.title || copy.waiting}</h3>
+            <span>{snapshot?.now_playing?.artist || currentProgram.name}</span>
+          </div>
+          <div className="rtfm__hero-controls">
+            <button type="button" className="rtfm__play" onClick={() => void togglePlayback()} disabled={!live} aria-label={playing ? copy.pause : copy.listen}>
+              {playing ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+            </button>
+            <div><strong>{playing ? copy.live : copy.listen}</strong><span>MP3 · 192 kbps · {language.toUpperCase()}</span></div>
+          </div>
+          <dl className="rtfm__hero-facts">
+            <div><dt>{copy.listeners}</dt><dd>{status.metrics.active_website_listeners}</dd></div>
+            <div><dt>{copy.current}</dt><dd>{currentProgram.name}<small>{currentProgram.time}</small></dd></div>
+          </dl>
+          <audio ref={audioRef} preload="none" src={streamUrl} aria-label={copy.player} onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} />
+        </aside>
       </section>
 
       <section className="rtfm__capabilities" aria-labelledby="capability-title">
@@ -260,16 +285,7 @@ export function PublicDashboard({ status, language, connectionError, onLanguageC
             <span>{snapshot?.now_playing?.artist || currentProgram.name}</span>
           </div>
 
-          <div className="rtfm__play-row">
-            <button type="button" className="rtfm__play" onClick={() => void togglePlayback()} disabled={!live} aria-label={playing ? copy.pause : copy.listen}>
-              {playing ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-            </button>
-            <div><strong>{playing ? copy.live : copy.listen}</strong><span>{snapshot?.stream.codec || 'AAC-LC'} · {snapshot?.stream.bitrate_kbps || 192} kbps · {language.toUpperCase()}</span></div>
-          </div>
-          <audio ref={audioRef} preload="none" src={streamUrl} aria-label={copy.player} onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} />
-
           <dl className="rtfm__facts">
-            <div><dt>{copy.listeners}</dt><dd>{status.metrics.active_website_listeners}</dd></div>
             <div><dt>{copy.current}</dt><dd>{currentProgram.name}<small>{currentProgram.time}</small></dd></div>
             <div><dt>{copy.next}</dt><dd>{snapshot?.next_program ? nextProgram.name : copy.unavailable}<small>{snapshot?.next_program ? nextProgram.time : ''}</small></dd></div>
             <div><dt>{copy.aiHost}</dt><dd>{snapshot?.speech_state.active ? copy.onMic : copy.curating}</dd></div>

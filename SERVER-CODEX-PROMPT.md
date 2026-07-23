@@ -7,8 +7,8 @@ You are Codex running on the authorized RadioTEDU Windows/IIS website server. Th
 Clone the public repository and check out the exact release tag below. Do not deploy another branch, a moving default branch, or an unverified local copy.
 
 - Repository: `https://github.com/Radio-TEDU/radiotedu-ai.git`
-- Web release tag: `v1.0.3`
-- Release page: `https://github.com/Radio-TEDU/radiotedu-ai/releases/tag/v1.0.3`
+- Web release tag: `v1.0.4`
+- Release page: `https://github.com/Radio-TEDU/radiotedu-ai/releases/tag/v1.0.4`
 
 The release contains the website source, supplied brand assets, six program covers, the website-only API, broadcast-connection contract, verification scripts and locked dependencies. It contains no music library, jingles, voice assets or credentials.
 
@@ -29,7 +29,8 @@ The AI application is not expected to exist on this server yet. At handoff time,
 
 Use the transferred source and assets exactly as the approved build. The visual direction is an original RadioTEDU editorial radio profile inspired by the broad information hierarchy of Andon FM, not a replica. It includes:
 
-- a large RadioTEDU AI editorial introduction;
+- a prominent but viewport-balanced RadioTEDU AI editorial introduction; preserve the words `RadioTEDU AI`, but do not let the masthead consume the full first screen;
+- an above-the-fold live panel showing station language, current programme, now-playing title and artist, play/pause, codec/bitrate, live state and anonymous active website-listener count without scrolling;
 - a restrained AI-capabilities strip;
 - an EN/FR station selector inside `/ai`;
 - a large station profile with current-program artwork, now playing, live player, current listeners, RTAI state, current/next program, 14-day music/talking split, and bounded sound tags;
@@ -75,9 +76,20 @@ Fixed signed-status contract:
 
 The website server verifies distinct EN and FR HMAC secrets. Obtain them only from the server's approved secret manager or ACL-protected environment. Never request or store an Icecast source password here.
 
+Before accepting operational status, expose the implemented mutual-authentication endpoint:
+
+- `POST /v1/radio/stations/{station_id}/handshake`
+- the broadcast computer initiates the outbound HTTPS request;
+- the server verifies the normal station-specific signed headers, fresh timestamp and one-time client nonce;
+- the server returns a fresh server nonce and station-secret HMAC proof;
+- the broadcast computer verifies that proof before considering the web server trusted;
+- every subsequent snapshot/play/cover request remains independently signed.
+
+This is not remote control and not an inbound connection to the broadcast computer. Matching station secrets require an approved out-of-band secret bootstrap. Never put them in this prompt, Git, deployment reports or browser code. If matching secrets are not yet present on both machines, report `awaiting_secret_provisioning`; do not claim a successful live handshake.
+
 ## Execute
 
-1. Clone `https://github.com/Radio-TEDU/radiotedu-ai.git` into a new versioned server directory, fetch tags, check out detached tag `v1.0.3`, and record the resolved commit SHA. Verify every file listed in `MANIFEST.json` before continuing. Do not deploy the default branch or discard server-owned data.
+1. Clone `https://github.com/Radio-TEDU/radiotedu-ai.git` into a new versioned server directory, fetch tags, check out detached tag `v1.0.4`, and record the resolved commit SHA. Verify every file listed in `MANIFEST.json` before continuing. Do not deploy the default branch or discard server-owned data.
 2. Back up the current IIS configuration and current `/ai` WordPress mapping/content in a recoverable, timestamped server-only location. Record exact rollback commands without exposing secrets.
 3. Confirm these required files exist: `backend/public_app.py`, `backend/platform_api.py`, `frontend/src/components/PublicDashboard.tsx`, `frontend/public/brand`, `frontend/public/programs`, `scripts/smoke_public_server.py`.
 4. Create an isolated Python environment, install `packaging/web/requirements-web.lock.txt`, run `npm ci`, and run `npm run build`. Confirm `dist/frontend/brand` and all six `dist/frontend/programs/*.png` files exist.
@@ -86,7 +98,7 @@ The website server verifies distinct EN and FR HMAC secrets. Obtain them only fr
 7. Install `python -m backend.public_app` as a durable least-privilege Windows service bound to loopback. Enable automatic restart and health logging with secret redaction. Do not install the operator app.
 8. Configure IIS/ARR so only these application paths reach the public app: `/ai`, `/assets/*`, `/brand/*`, `/programs/*`, `/v1/radio/*`, and `/openapi.json` if intentionally public. Ensure `/ai/en` and `/ai/fr` return 404. Preserve all unrelated WordPress routes.
 9. Configure `api.radiotedu.com` HTTPS binding/reverse proxy to the same public app's versioned API. If public DNS for this hostname is absent, configure IIS and certificate readiness but do not silently substitute another canonical origin; record the DNS dependency.
-10. Build only the signed status connection specified in `packaging/web/BROADCAST-CONNECTION.md`. The broadcast computer pushes signed EN/FR status and play events to `https://api.radiotedu.com/v1/radio/...`; the web server verifies station-bound HMAC headers using distinct protected secrets. The website server never connects to Icecast and never sends playout commands to the broadcast computer.
+10. Build only the signed status connection specified in `packaging/web/BROADCAST-CONNECTION.md`. Verify the implemented mutual handshake for both stations when matching secrets are already available: the broadcast computer initiates signed requests and verifies the server's signed nonce response. Then accept signed EN/FR status and play events at `https://api.radiotedu.com/v1/radio/...`. If matching secrets are not available on both machines, finish the safe website deployment, record `awaiting_secret_provisioning`, and provide an ACL-protected server-local secret provisioning checklist in the report. The website server never initiates a connection to the broadcast computer, connects to Icecast or sends playout commands.
 11. Do not create, modify, proxy, bind or administer `stream.radiotedu.com` on this website server. The website's browser audio element must map EN directly to `https://stream.radiotedu.com/ai` and FR directly to `https://stream.radiotedu.com/event`. These two release-pinned URLs override any older stream URL carried in a delayed signed status snapshot. Treat their availability as an external stream-service state, not as a website-server deployment responsibility.
 12. Run `packaging/web/verify-website-runtime.ps1` from the website server. Require healthy loopback `/ai` and EN/FR status endpoints, require both exact public stream URLs in the built browser bundle, and reject any private Icecast address or operator-control path in that bundle.
 13. Apply API proxy limits before forwarding: 256 KiB for snapshots and play events, 5 MiB for covers. Keep application-side bounded reads as defense in depth.
@@ -110,10 +122,12 @@ Then verify from the public side:
 - EN audio source is exactly `https://stream.radiotedu.com/ai`, FR exactly `https://stream.radiotedu.com/event`, even when an older status snapshot contains `/en` or `/fr`;
 - `/brand/radiotedu-logo-white.png`, `/brand/rtai-logo.png`, and all six `/programs/*.png` assets return 200 with correct MIME types;
 - desktop and narrow-mobile layouts render without overflow, obscured controls or unreadable logo treatment;
+- the first viewport preserves the RadioTEDU AI masthead and shows the live player, now-playing identity and active anonymous website-listener count without scrolling at 1440×900 and 390×844;
 - fresh, stale, absent and interrupted snapshot states are honest, and the last valid snapshot remains visible;
 - listener sessions are station-scoped and contain no browser identity;
 - 14-day airtime aggregation, rounding, empty history and curated tag fallback are correct;
 - HMAC identity/scope/station/path binding, stale timestamps, nonce replay, idempotency, sequence rollback, private/oversized payload rejection, stable redaction and correlation IDs pass;
+- EN and FR handshake requests reject wrong secrets/replayed nonces, and successful replies have fresh server nonces with independently recomputable station-specific server proofs;
 - public OpenAPI and rendered UI expose no commerce, engagement, operator or playout-control surface;
 - the built website points directly to `https://stream.radiotedu.com/ai` and `https://stream.radiotedu.com/event`; no IIS/ARR stream proxy or private Icecast address exists on this server;
 - no generated or transferred file contains an Icecast source credential.
@@ -124,6 +138,6 @@ Write a redacted machine-readable result to:
 
 `C:\ProgramData\RadioTEDU\reports\web-deployment.json`
 
-Include: timestamp, hostname, deployed revision, backup/rollback location, build/test results, IIS bindings, loopback service status, public route status matrix, asset checks, API/DNS/TLS state, stream checks, production cutover result, unresolved dependencies and exact rollback commands. Never include secret values, tokens, credentials, private payloads, listener identifiers or local music paths.
+Include: timestamp, hostname, deployed revision, backup/rollback location, build/test results, IIS bindings, loopback service status, public route status matrix, asset checks, API/DNS/TLS state, EN/FR handshake state (`verified` or `awaiting_secret_provisioning`), stream checks, production cutover result, unresolved dependencies and exact rollback commands. Never include secret values, tokens, credentials, private payloads, listener identifiers or local music paths.
 
 Do not wait for the builder computer and do not start a discussion. After writing the report, your final output must be one line only: `RADIO TEDU WEB COMPLETE — report: C:\ProgramData\RadioTEDU\reports\web-deployment.json` or `RADIO TEDU WEB SAFE STOP — report: C:\ProgramData\RadioTEDU\reports\web-deployment.json`.

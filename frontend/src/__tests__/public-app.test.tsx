@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -71,6 +71,11 @@ describe('public listener route', () => {
     const view = render(<App />);
 
     expect(await screen.findByRole('img', { name: 'RadioTEDU' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'RadioTEDU AI' })).toBeInTheDocument();
+    const listener = screen.getByLabelText('RadioTEDU English listener');
+    expect(within(listener).getByText('Current listeners')).toBeInTheDocument();
+    expect(within(listener).getByText('0')).toBeInTheDocument();
+    expect(within(listener).getByRole('button', { name: 'Listen live' })).toBeInTheDocument();
     expect(fetchStation).toHaveBeenCalledWith('radiotedu-en');
     await waitFor(() => expect(postSession).toHaveBeenCalledWith('radiotedu-en', 'start', expect.any(String)));
 

@@ -34,6 +34,13 @@ $http = [ordered]@{
     radiotedu_fr = Get-HttpStatus "$base/v1/radio/stations/radiotedu-fr/status"
 }
 
+try {
+    $openApi = (Invoke-WebRequest -UseBasicParsing -TimeoutSec 5 -Uri "$base/openapi.json").Content
+} catch {
+    $openApi = ""
+}
+$handshakePresent = $openApi.Contains("/v1/radio/stations/{station_id}/handshake")
+
 $javascript = Get-ChildItem -LiteralPath (Join-Path $FrontendDist "assets") -Filter "*.js" -File |
     ForEach-Object { [IO.File]::ReadAllText($_.FullName) }
 $bundle = $javascript -join "`n"
@@ -41,13 +48,20 @@ $englishStream = $bundle.Contains("https://stream.radiotedu.com/ai")
 $frenchStream = $bundle.Contains("https://stream.radiotedu.com/event")
 $privateIcecastAbsent = $bundle -notmatch '10\.98\.98\.75|:11154'
 $operatorControlsAbsent = $bundle -notmatch '/api/air|/api/control|radiotedu_admin_token|OperatorApp'
+$firstViewportContentPresent = (
+    $bundle.Contains("RadioTEDU") -and
+    $bundle.Contains("Current listeners") -and
+    $bundle.Contains("Now playing")
+)
 $httpReady = @($http.Values | Where-Object { $_ -eq 200 }).Count -eq 3
 $ok = [bool](
     $httpReady -and
+    $handshakePresent -and
     $englishStream -and
     $frenchStream -and
     $privateIcecastAbsent -and
-    $operatorControlsAbsent
+    $operatorControlsAbsent -and
+    $firstViewportContentPresent
 )
 
 [ordered]@{
@@ -61,6 +75,8 @@ $ok = [bool](
     }
     private_icecast_absent = $privateIcecastAbsent
     operator_controls_absent = $operatorControlsAbsent
+    mutual_handshake_endpoint_present = $handshakePresent
+    first_viewport_content_present = $firstViewportContentPresent
     website_ready = $ok
     credentials_logged = $false
 } | ConvertTo-Json -Depth 6
